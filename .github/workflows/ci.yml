@@ -24,4 +24,5 @@ jobs:
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm use v22.2.0
             npm install
-            pm2 restart ecosystem.config.js
+            pm2 delete ecosystem.config.js
+            pm2 start ecosystem.config.js
