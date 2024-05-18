@@ -20,5 +20,5 @@ jobs:
           script: |
             cd ~/riasec_app_backend
             git pull origin main
-            npm install
-            pm2 restart ecosystem.config.js
+            /home/ubuntu/.nvm/versions/node/v22.2.0/bin/npm install
+            /home/ubuntu/.nvm/versions/node/v22.2.0/bin/pm2 restart ecosystem.config.js
