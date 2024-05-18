@@ -4,14 +4,14 @@ require('dotenv').config()
 const init = async () => {
   const server = Hapi.server({
     host: process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost',
-    port: 3000
+    port: process.env.PORT || 3000
   })
 
   server.route({
     method: 'GET',
     path: '/',
     handler: (request, h) => {
-      return 'Hello world! again'
+      return 'Hello world! again testing 123!'
     }
   })
 
