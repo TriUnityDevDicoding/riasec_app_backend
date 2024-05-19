@@ -1,28 +1,54 @@
-name: Continuous Deployment
+name: Continuous Integration
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: ['22.x']
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: secretpassword
+          POSTGRES_DB: riasec_app_test
+
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
-      - name: SSH and deploy app
-        uses: appleboy/ssh-action@master
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            cd ~/riasec_app_backend
-            git pull origin main
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            nvm use v22.2.0
-            npm install
-            pm2 delete ecosystem.config.js
-            pm2 start ecosystem.config.js
+          node-version: ${{ matrix.node-version }}
+      - name: npm install migrate and test
+        run: |
+          npm install
+          npm run migrate up
+          npm run test
+        env:
+          CI: true
+          HOST: localhost
+          PORT: 3000
+          PGHOST: localhost
+          PGPORT: 5432
+          PGUSER: postgres
+          PGPASSWORD: Desember2612
+          PGDATABASE: secretpassword
+          ACCESS_TOKEN_KEY: secret
+          REFRESH_TOKEN_KEY: terces
+          ACCESS_TOKEN_AGE: 3600
