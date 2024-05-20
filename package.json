@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node src/app.js",
     "start:dev": "nodemon src/app.js",
+    "migrate": "npx prisma migrate",
     "lint": "eslint ./"
   },
   "keywords": [],
@@ -17,10 +18,12 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.1.1",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "prisma": "^5.14.0"
   },
   "dependencies": {
     "@hapi/hapi": "^21.3.9",
+    "@prisma/client": "^5.14.0",
     "dotenv": "^16.4.5"
   }
 }
