@@ -28,9 +28,5 @@ model User {
   created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
   deleted_at    DateTime?
-}
-
-model Authentication {
-  id    String @id @default(uuid())
-  token String @unique
+  @@map("users")
 }
