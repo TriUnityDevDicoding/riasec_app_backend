@@ -3,11 +3,11 @@ class UserRepository {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
 
-  async verifyAvailableEmail (email) {
+  async getUserById (id) {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
 
-  async getPasswordByEmail (email) {
+  async verifyAvailableEmail (email) {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
 }
