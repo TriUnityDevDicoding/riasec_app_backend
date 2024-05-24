@@ -28,7 +28,7 @@ describe('A RegisterUser entities', () => {
     const payload = {
       fullname: 'John Doe',
       email: 'johndoe',
-      password: 'johndoe',
+      password: 'johndoe123',
       dateOfBirth: new Date('2000-03-05'),
       gender: 'Male'
     }
@@ -40,7 +40,7 @@ describe('A RegisterUser entities', () => {
     const payload = {
       fullname: 'John Doe',
       email: 'johndoe@email.com',
-      password: 'johndoe',
+      password: 'johndoe123',
       dateOfBirth: new Date('2000-03-05'),
       gender: 'Male'
     }

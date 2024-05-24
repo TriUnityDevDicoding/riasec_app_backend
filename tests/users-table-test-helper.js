@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 const prisma = require('../src/infrastructures/database/postgres/prisma-client')
 
 const UsersTableTestHelper = {
@@ -10,7 +11,7 @@ const UsersTableTestHelper = {
     gender = 'Male'
   }) {
     await prisma.user.create({
-      data: { id, fullname, email, password, date_of_birth: dateOfBirth, gender }
+      data: { id, full_name: fullname, email, password, date_of_birth: dateOfBirth, gender }
     })
   },
 
