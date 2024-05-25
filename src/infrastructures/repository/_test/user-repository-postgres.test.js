@@ -3,7 +3,7 @@ const InvariantError = require('../../../commons/exceptions/invariant-error')
 const NotFoundError = require('../../../commons/exceptions/not-found-error')
 const RegisterUser = require('../../../domains/users/entities/register-user')
 const RegisteredUser = require('../../../domains/users/entities/registered-user')
-const prisma = require('../../database/postgres/prisma-client')
+const prisma = require('../../database/client/prisma-client')
 const UserRepositoryPostgres = require('../user-repository-postgres')
 
 describe('UserRepositoryPostgres', () => {
