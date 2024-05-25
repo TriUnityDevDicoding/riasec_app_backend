@@ -4,7 +4,7 @@ const { createContainer } = require('instances-container')
 // external agency
 const { nanoid } = require('nanoid')
 const bcrypt = require('bcrypt')
-const prisma = require('./database/postgres/prisma-client')
+const prisma = require('./database/client/prisma-client')
 
 // services (repository, helper, manager, etc.)
 const UserRepository = require('../domains/users/user-repository')

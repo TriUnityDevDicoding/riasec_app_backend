@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-const prisma = require('../src/infrastructures/database/postgres/prisma-client')
+const prisma = require('../src/infrastructures/database/client/prisma-client')
 
 const UsersTableTestHelper = {
   async addUser ({

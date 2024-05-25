@@ -1,4 +1,4 @@
-const prisma = require('../../database/postgres/prisma-client')
+const prisma = require('../../database/client/prisma-client')
 const UsersTableTestHelper = require('../../../../tests/users-table-test-helper')
 const container = require('../../container')
 const createServer = require('../create-server')
