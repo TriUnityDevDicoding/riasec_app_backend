@@ -1,0 +1,52 @@
+const InvariantError = require('../../commons/exceptions/invariant-error')
+const NotFoundError = require('../../commons/exceptions/not-found-error')
+const RegisteredUser = require('../../domains/users/entities/registered-user')
+const UserRepository = require('../../domains/users/user-repository')
+const { mapDBToRegisteredUser } = require('../utils')
+
+class UserRepositoryPostgres extends UserRepository {
+  constructor (prisma, idGenerator) {
+    super()
+    this._prisma = prisma
+    this._idGenerator = idGenerator
+  }
+
+  async addUser (registerUser) {
+    const { fullname, email, password, dateOfBirth, gender } = registerUser
+    const id = `user-${this._idGenerator()}`
+
+    const registeredUser = await this._prisma.user.create({
+      data: { id, full_name: fullname, email, password, date_of_birth: dateOfBirth, gender }
+    })
+
+    return new RegisteredUser(mapDBToRegisteredUser(registeredUser))
+  }
+
+  async getUserById (id) {
+    const findUser = await this._prisma.user.findUnique({
+      where: {
+        id
+      }
+    })
+
+    if (!findUser) {
+      throw new NotFoundError('user data not found.')
+    }
+
+    return new RegisteredUser(mapDBToRegisteredUser(findUser))
+  }
+
+  async verifyAvailableEmail (email) {
+    const findUserEmail = await this._prisma.user.findUnique({
+      where: {
+        email
+      }
+    })
+
+    if (findUserEmail) {
+      throw new InvariantError('email is not available.')
+    }
+  }
+}
+
+module.exports = UserRepositoryPostgres
