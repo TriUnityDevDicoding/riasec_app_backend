@@ -28,5 +28,12 @@ model User {
   created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
   deleted_at    DateTime?
+
   @@map("users")
+}
+
+model Authentication {
+  token String @id
+
+  @@map("authentications")
 }
