@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-const { createContainer } = require('istances-container')
+const { createContainer } = require('instances-container')
 
 // external agency
 const { nanoid } = require('nanoid')
