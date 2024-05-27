@@ -7,7 +7,7 @@ const UsersTableTestHelper = {
     fullname = 'John Doe',
     email = 'johndoe@email.com',
     password = 'johndoe123',
-    dateOfBirth = new Date('2000-03-05'),
+    dateOfBirth = '2000-03-05',
     gender = 'Male'
   }) {
     await prisma.user.create({

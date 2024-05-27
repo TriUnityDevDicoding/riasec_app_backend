@@ -17,7 +17,7 @@ class RegisteredUser {
       throw new Error('REGISTERED_USER.NOT_CONTAIN_NEEDED_PROPERTY')
     }
 
-    if (typeof id !== 'string' || typeof fullname !== 'string' || typeof email !== 'string' || !(dateOfBirth instanceof Date) || checkGender) {
+    if (typeof id !== 'string' || typeof fullname !== 'string' || typeof email !== 'string' || typeof dateOfBirth !== 'string' || checkGender) {
       throw new Error('REGISTERED_USER.NOT_MEET_DATA_TYPE_SPECIFICATION')
     }
   }

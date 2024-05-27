@@ -5,7 +5,7 @@ describe('A RegisteredUser entitites', () => {
     const payload = {
       fullname: 'John Doe',
       email: 'johndoe@email.com',
-      dateOfBirth: new Date('2000-03-05'),
+      dateOfBirth: '2000-03-05',
       gender: 'Male'
     }
 
@@ -17,7 +17,7 @@ describe('A RegisteredUser entitites', () => {
       id: 123,
       fullname: 'John Doe',
       email: 'johndoe@email.com',
-      dateOfBirth: new Date('2000-03-05'),
+      dateOfBirth: '2000-03-05',
       gender: 'Man'
     }
 
@@ -29,7 +29,7 @@ describe('A RegisteredUser entitites', () => {
       id: 'user-123',
       fullname: 'John Doe',
       email: 'johndoe@email.com',
-      dateOfBirth: new Date('2000-03-05'),
+      dateOfBirth: '2000-03-05',
       gender: 'Male'
     }
 

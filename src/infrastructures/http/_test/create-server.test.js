@@ -17,7 +17,7 @@ describe('HTTP server', () => {
       fullname: 'John Doe',
       email: 'johndoe@email.com',
       password: 'johndoe123',
-      dateOfBirth: new Date('2000-03-05'),
+      dateOfBirth: '2000-03-05',
       gender: 'Male'
     }
     const server = await createServer({})

@@ -7,7 +7,7 @@ CREATE TABLE "users" (
     "full_name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "date_of_birth" TIMESTAMP(3) NOT NULL,
+    "date_of_birth" TEXT NOT NULL,
     "gender" "Gender" NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,

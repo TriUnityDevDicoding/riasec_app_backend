@@ -11,7 +11,7 @@ describe('ShowUserUseCase', () => {
       id: useCasePayload.id,
       fullname: 'John Doe',
       email: 'johndoe@email.com',
-      dateOfBirth: new Date('2000-03-05'),
+      dateOfBirth: '2000-03-05',
       gender: 'Male'
     }
     const expectedRegisteredUser = new RegisteredUser({
