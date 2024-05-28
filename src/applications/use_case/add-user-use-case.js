@@ -7,6 +7,7 @@ class AddUserUseCase {
   }
 
   async execute (useCasePayload) {
+    useCasePayload.dateOfBirth = new Date(useCasePayload.dateOfBirth)
     const registerUser = new RegisterUser(useCasePayload)
 
     await this._userRepository.verifyAvailableEmail(registerUser.email)

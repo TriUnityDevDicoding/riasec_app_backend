@@ -12,13 +12,12 @@ class RegisteredUser {
 
   _verifyPayload ({ id, fullname, email, dateOfBirth, gender }) {
     const checkGender = !!(gender !== 'Male' && gender !== 'Female')
-    const dateOfBirthObj = new Date(dateOfBirth)
 
     if (!id || !fullname || !email || !dateOfBirth || !gender) {
       throw new Error('REGISTERED_USER.NOT_CONTAIN_NEEDED_PROPERTY')
     }
 
-    if (typeof id !== 'string' || typeof fullname !== 'string' || typeof email !== 'string' || !(dateOfBirthObj instanceof Date) || checkGender) {
+    if (typeof id !== 'string' || typeof fullname !== 'string' || typeof email !== 'string' || !(dateOfBirth instanceof Date) || checkGender) {
       throw new Error('REGISTERED_USER.NOT_MEET_DATA_TYPE_SPECIFICATION')
     }
   }
