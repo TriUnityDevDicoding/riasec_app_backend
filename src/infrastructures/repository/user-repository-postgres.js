@@ -1,6 +1,5 @@
 const InvariantError = require('../../commons/exceptions/invariant-error')
 const NotFoundError = require('../../commons/exceptions/not-found-error')
-const RegisteredUser = require('../../domains/users/entities/registered-user')
 const UserRepository = require('../../domains/users/user-repository')
 const { mapDBToRegisteredUser } = require('../utils')
 
@@ -19,7 +18,7 @@ class UserRepositoryPostgres extends UserRepository {
       data: { id, full_name: fullname, email, password, date_of_birth: dateOfBirth, gender }
     })
 
-    return new RegisteredUser(mapDBToRegisteredUser(registeredUser))
+    return mapDBToRegisteredUser(registeredUser)
   }
 
   async getUserById (id) {
@@ -33,7 +32,7 @@ class UserRepositoryPostgres extends UserRepository {
       throw new NotFoundError('user data not found.')
     }
 
-    return new RegisteredUser(mapDBToRegisteredUser(findUser))
+    return mapDBToRegisteredUser(findUser)
   }
 
   async verifyAvailableEmail (email) {

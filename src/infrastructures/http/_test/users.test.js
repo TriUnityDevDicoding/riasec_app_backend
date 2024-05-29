@@ -18,7 +18,7 @@ describe('/users endpoint', () => {
         fullname: 'John Doe',
         email: 'johndoe@email.com',
         password: 'johndoe123',
-        dateOfBirth: new Date('2000-03-05'),
+        dateOfBirth: '2000-03-05',
         gender: 'Male'
       }
       const server = await createServer(container)
@@ -29,18 +29,17 @@ describe('/users endpoint', () => {
         payload: requestPayload
       })
 
-      // console.log()
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(201)
       expect(responseJson.status).toEqual('success')
-      expect(responseJson.data.addedUser).toBeDefined()
+      expect(responseJson.data.registeredUser).toBeDefined()
     })
 
     it('should response 400 when request payload not contain needed property', async () => {
       const requestPayload = {
         fullname: 'John Doe',
         email: 'johndoe@email.com',
-        dateOfBirth: new Date('2000-03-05'),
+        dateOfBirth: 'johndoe123',
         gender: 'Male'
       }
       const server = await createServer(container)
@@ -84,7 +83,7 @@ describe('/users endpoint', () => {
         fullname: 'John Doe',
         email: 'johndoe',
         password: 'johndoe123',
-        dateOfBirth: new Date('2000-03-05'),
+        dateOfBirth: 'johndoe123',
         gender: 'Male'
       }
       const server = await createServer(container)
@@ -98,7 +97,7 @@ describe('/users endpoint', () => {
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(400)
       expect(responseJson.status).toEqual('fail')
-      expect(responseJson.message).toEqual('cannot create a new user: email is invalid.')
+      expect(responseJson.message).toEqual('cannot create a new user: the email is invalid.')
     })
 
     it('should response 400 when username unavailable', async () => {
@@ -107,7 +106,7 @@ describe('/users endpoint', () => {
         fullname: 'John Doe',
         email: 'johndoe@email.com',
         password: 'johndoe123',
-        dateOfBirth: new Date('2000-03-05'),
+        dateOfBirth: 'johndoe123',
         gender: 'Male'
       }
       const server = await createServer(container)
@@ -121,7 +120,7 @@ describe('/users endpoint', () => {
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(400)
       expect(responseJson.status).toEqual('fail')
-      expect(responseJson.message).toEqual('cannot create a new user: email already registered.')
+      expect(responseJson.message).toEqual('email is not available.')
     })
   })
 })
