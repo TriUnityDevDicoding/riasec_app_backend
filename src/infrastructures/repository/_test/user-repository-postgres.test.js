@@ -1,8 +1,6 @@
 const UsersTableTestHelper = require('../../../../tests/users-table-test-helper')
 const InvariantError = require('../../../commons/exceptions/invariant-error')
 const NotFoundError = require('../../../commons/exceptions/not-found-error')
-const RegisterUser = require('../../../domains/users/entities/register-user')
-const RegisteredUser = require('../../../domains/users/entities/registered-user')
 const prisma = require('../../database/client/prisma-client')
 const UserRepositoryPostgres = require('../user-repository-postgres')
 
@@ -17,27 +15,22 @@ describe('UserRepositoryPostgres', () => {
 
   describe('addUser function', () => {
     it('should persist register user and return registered user correctly', async () => {
-      const registerUser = new RegisterUser({
+      const userPayloadInDatabase = {
+        id: 'user-123',
         fullname: 'John Doe',
         email: 'johndoe@email.com',
         password: 'johndoe123',
         dateOfBirth: new Date('2000-03-05'),
         gender: 'Male'
-      })
+      }
       const fakeIdGenerator = () => '123'
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, fakeIdGenerator)
 
-      const registeredUser = await userRepositoryPostgres.addUser(registerUser)
+      const registeredUser = await userRepositoryPostgres.addUser(userPayloadInDatabase)
 
       const findUser = await UsersTableTestHelper.findUserById(registeredUser.id)
       expect(findUser.id).toStrictEqual(registeredUser.id)
-      expect(registeredUser).toStrictEqual(new RegisteredUser({
-        id: 'user-123',
-        fullname: 'John Doe',
-        email: 'johndoe@email.com',
-        dateOfBirth: new Date('2000-03-05'),
-        gender: 'Male'
-      }))
+      expect(registeredUser).toStrictEqual(userPayloadInDatabase)
     })
   })
 
@@ -49,23 +42,24 @@ describe('UserRepositoryPostgres', () => {
     })
 
     it('should run function getUserById correctly and return expected properties', async () => {
-      const user = {
+      const userPayloadInDatabase = {
         id: 'user-123',
         fullname: 'John Doe',
         email: 'johndoe@email.com',
+        password: 'johndoe123',
         dateOfBirth: new Date('2000-03-05'),
         gender: 'Male'
       }
-      await UsersTableTestHelper.addUser({ ...user })
+      await UsersTableTestHelper.addUser({ ...userPayloadInDatabase })
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
 
-      const detailUser = await userRepositoryPostgres.getUserById(user.id)
+      const detailUser = await userRepositoryPostgres.getUserById(userPayloadInDatabase.id)
 
-      expect(detailUser.id).toStrictEqual(user.id)
-      expect(detailUser.fullname).toStrictEqual(user.fullname)
-      expect(detailUser.email).toStrictEqual(user.email)
-      expect(detailUser.dateOfBirth).toStrictEqual(user.dateOfBirth)
-      expect(detailUser.gender).toStrictEqual(user.gender)
+      expect(detailUser.id).toStrictEqual(userPayloadInDatabase.id)
+      expect(detailUser.fullname).toStrictEqual(userPayloadInDatabase.fullname)
+      expect(detailUser.email).toStrictEqual(userPayloadInDatabase.email)
+      expect(detailUser.dateOfBirth).toStrictEqual(userPayloadInDatabase.dateOfBirth)
+      expect(detailUser.gender).toStrictEqual(userPayloadInDatabase.gender)
       expect(detailUser).toHaveProperty('id')
       expect(detailUser).toHaveProperty('fullname')
       expect(detailUser).toHaveProperty('email')

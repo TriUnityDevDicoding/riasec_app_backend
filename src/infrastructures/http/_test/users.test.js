@@ -18,7 +18,7 @@ describe('/users endpoint', () => {
         fullname: 'John Doe',
         email: 'johndoe@email.com',
         password: 'johndoe123',
-        dateOfBirth: new Date('2000-03-05'),
+        dateOfBirth: '2000-03-05',
         gender: 'Male'
       }
       const server = await createServer(container)
@@ -39,7 +39,7 @@ describe('/users endpoint', () => {
       const requestPayload = {
         fullname: 'John Doe',
         email: 'johndoe@email.com',
-        dateOfBirth: new Date('2000-03-05'),
+        dateOfBirth: 'johndoe123',
         gender: 'Male'
       }
       const server = await createServer(container)
@@ -83,7 +83,7 @@ describe('/users endpoint', () => {
         fullname: 'John Doe',
         email: 'johndoe',
         password: 'johndoe123',
-        dateOfBirth: new Date('2000-03-05'),
+        dateOfBirth: 'johndoe123',
         gender: 'Male'
       }
       const server = await createServer(container)
@@ -106,7 +106,7 @@ describe('/users endpoint', () => {
         fullname: 'John Doe',
         email: 'johndoe@email.com',
         password: 'johndoe123',
-        dateOfBirth: new Date('2000-03-05'),
+        dateOfBirth: 'johndoe123',
         gender: 'Male'
       }
       const server = await createServer(container)

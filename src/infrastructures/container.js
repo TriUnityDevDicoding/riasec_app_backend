@@ -11,6 +11,8 @@ const UserRepository = require('../domains/users/user-repository')
 const UserRepositoryPostgres = require('./repository/user-repository-postgres')
 const PasswordHash = require('../applications/security/password-hash')
 const BcryptPasswordHash = require('./security/bcrypt-password-hash')
+const DateOfBirthParse = require('../applications/security/date-of-birth-parse')
+const ParsingDateOfBirth = require('./security/parsing-date-of-birth')
 
 // use case
 const AddUserUseCase = require('../applications/use_case/add-user-use-case')
@@ -37,6 +39,10 @@ container.register([
         { concrete: bcrypt }
       ]
     }
+  },
+  {
+    key: DateOfBirthParse.name,
+    Class: ParsingDateOfBirth
   }
 ])
 
@@ -54,6 +60,10 @@ container.register([
         {
           name: 'passwordHash',
           internal: PasswordHash.name
+        },
+        {
+          name: 'dateOfBirthParse',
+          internal: DateOfBirthParse.name
         }
       ]
     }
@@ -65,8 +75,12 @@ container.register([
       injectType: 'destructuring',
       dependencies: [
         {
-          name: 'userRpository',
+          name: 'userRepository',
           internal: UserRepository.name
+        },
+        {
+          name: 'dateOfBirthParse',
+          internal: DateOfBirthParse.name
         }
       ]
     }
