@@ -4,13 +4,13 @@ const UserRepository = require('../../domains/users/user-repository')
 const { mapDBToRegisteredUser } = require('../utils')
 
 class UserRepositoryPostgres extends UserRepository {
-  constructor (prisma, idGenerator) {
+  constructor(prisma, idGenerator) {
     super()
     this._prisma = prisma
     this._idGenerator = idGenerator
   }
 
-  async addUser (registerUser) {
+  async addUser(registerUser) {
     const { fullname, email, password, dateOfBirth, gender } = registerUser
     const id = `user-${this._idGenerator()}`
 
@@ -21,7 +21,7 @@ class UserRepositoryPostgres extends UserRepository {
     return mapDBToRegisteredUser(registeredUser)
   }
 
-  async getUserById (id) {
+  async getUserById(id) {
     const findUser = await this._prisma.user.findUnique({
       where: {
         id
@@ -35,7 +35,7 @@ class UserRepositoryPostgres extends UserRepository {
     return mapDBToRegisteredUser(findUser)
   }
 
-  async verifyAvailableEmail (email) {
+  async verifyAvailableEmail(email) {
     const findUserEmail = await this._prisma.user.findUnique({
       where: {
         email
