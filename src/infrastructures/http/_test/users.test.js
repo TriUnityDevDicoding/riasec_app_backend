@@ -123,4 +123,39 @@ describe('/users endpoint', () => {
       expect(responseJson.message).toEqual('email is not available.')
     })
   })
+
+  describe('when GET /users', () => {
+    it('should response 200 and persisted detail user', async () => {
+      const user = {
+        id: 'user-123'
+      }
+      await UsersTableTestHelper.addUser({ ...user })
+      const server = await createServer(container)
+
+      const response = await server.inject({
+        method: 'GET',
+        url: `/users/${user.id}`
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(200)
+      expect(responseJson.status).toEqual('success')
+      expect(responseJson.data).toBeDefined()
+      expect(responseJson.data.user).toBeDefined()
+    })
+
+    it('should response 404 when user not found', async () => {
+      const server = await createServer(container)
+
+      const response = await server.inject({
+        method: 'GET',
+        url: '/users/userId'
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(404)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('user data not found.')
+    })
+  })
 })
