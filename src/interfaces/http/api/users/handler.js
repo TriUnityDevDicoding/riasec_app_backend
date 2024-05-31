@@ -15,9 +15,9 @@ class UsersHandler {
 
     const response = h.response({
       status: 'success',
-      message: 'user registered successfully',
+      message: 'user registered successfully.',
       data: {
-        registeredUser
+        user: registeredUser
       }
     })
     response.code(201)
@@ -31,7 +31,7 @@ class UsersHandler {
 
     const response = h.response({
       status: 'success',
-      message: 'user retrieved successfully',
+      message: 'user retrieved successfully.',
       data: {
         user: detailUser
       }

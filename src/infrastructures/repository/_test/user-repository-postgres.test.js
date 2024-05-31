@@ -14,7 +14,7 @@ describe('UserRepositoryPostgres', () => {
   })
 
   describe('addUser function', () => {
-    it('should persist register user and return registered user correctly', async () => {
+    it('should persist register user and return added user id correctly', async () => {
       const userPayloadInDatabase = {
         id: 'user-123',
         fullname: 'John Doe',
@@ -30,7 +30,7 @@ describe('UserRepositoryPostgres', () => {
 
       const findUser = await UsersTableTestHelper.findUserById(registeredUser.id)
       expect(findUser.id).toStrictEqual(registeredUser.id)
-      expect(registeredUser).toStrictEqual(userPayloadInDatabase)
+      expect(registeredUser.id).toStrictEqual(userPayloadInDatabase.id)
     })
   })
 
