@@ -1,5 +1,4 @@
 const RegisterUser = require('../../../domains/users/entities/register-user')
-// const RegisteredUser = require('../../../domains/users/entities/registered-user')
 const UserRepository = require('../../../domains/users/user-repository')
 const PasswordHash = require('../../security/password-hash')
 const DateofBirthParse = require('../../security/date-of-birth-parse')
