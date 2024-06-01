@@ -35,7 +35,7 @@ describe('UserRepositoryPostgres', () => {
   })
 
   describe('getUserById function', () => {
-    it('should throw NotFoundError when user not found', async () => {
+    it('should throw NotFoundError when user not found.', async () => {
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
 
       return expect(userRepositoryPostgres.getUserById('user-123')).rejects.toThrow(NotFoundError)
