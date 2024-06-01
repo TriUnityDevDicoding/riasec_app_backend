@@ -91,7 +91,7 @@ describe('UserRepositoryPostgres', () => {
       // Action & Assert
       return expect(userRepositoryPostgres.getPasswordByEmail('johndoe@email.com'))
         .rejects
-        .toThrowError(InvariantError)
+        .toThrow(InvariantError)
     })
 
     it('should return email password when user is found', async () => {
@@ -116,7 +116,7 @@ describe('UserRepositoryPostgres', () => {
       // Action & Assert
       await expect(userRepositoryPostgres.getIdByEmail('johndoe@email.com'))
         .rejects
-        .toThrowError(InvariantError)
+        .toThrow(InvariantError)
     })
 
     it('should return user id correctly', async () => {
