@@ -82,4 +82,53 @@ describe('UserRepositoryPostgres', () => {
       await expect(userRepositoryPostgres.verifyAvailableEmail('johndoe@email.com')).resolves.not.toThrow(InvariantError)
     })
   })
+
+  describe('getPasswordByEmail', () => {
+    it('should throw InvariantError when user not found', () => {
+      // Arrange
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      // Action & Assert
+      return expect(userRepositoryPostgres.getPasswordByEmail('johndoe@email.com'))
+        .rejects
+        .toThrowError(InvariantError)
+    })
+
+    it('should return email password when user is found', async () => {
+      // Arrange
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+      await UsersTableTestHelper.addUser({
+        email: 'johndoe@email.com',
+        password: 'secret_password'
+      })
+
+      // Action & Assert
+      const password = await userRepositoryPostgres.getPasswordByEmail('johndoe@email.com')
+      expect(password).toBe('secret_password')
+    })
+  })
+
+  describe('getIdByEmail', () => {
+    it('should throw InvariantError when user not found', async () => {
+      // Arrange
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      // Action & Assert
+      await expect(userRepositoryPostgres.getIdByEmail('johndoe@email.com'))
+        .rejects
+        .toThrowError(InvariantError)
+    })
+
+    it('should return user id correctly', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-321', email: 'johndoe@email.com' })
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      // Action
+      const userId = await userRepositoryPostgres.getIdByEmail('johndoe@email.com')
+
+      // Assert
+      expect(userId).toEqual('user-321')
+    })
+  })
 })

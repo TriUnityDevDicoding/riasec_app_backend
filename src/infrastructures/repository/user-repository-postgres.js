@@ -78,7 +78,7 @@ class UserRepositoryPostgres extends UserRepository {
       throw new InvariantError('user not found.')
     }
 
-    return result
+    return result.id
   }
 }
 
