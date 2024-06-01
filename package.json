@@ -11,7 +11,8 @@
     "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config -i",
     "migrate": "npx prisma migrate",
     "migrate:test": "dotenv -e .test.env npx prisma migrate",
-    "lint": "eslint ./"
+    "lint": "eslint ./",
+    "lint:fix": "eslint ./ -- --fix"
   },
   "keywords": [],
   "author": "",
