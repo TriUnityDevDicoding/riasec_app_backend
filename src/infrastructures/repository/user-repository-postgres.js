@@ -18,7 +18,7 @@ class UserRepositoryPostgres extends UserRepository {
       data: { id, full_name: fullname, email, password, date_of_birth: dateOfBirth, gender }
     })
 
-    return mapDBToRegisteredUser(registeredUser)
+    return { id: registeredUser.id }
   }
 
   async getUserById (id) {

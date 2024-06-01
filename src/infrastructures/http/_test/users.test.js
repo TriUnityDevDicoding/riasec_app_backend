@@ -32,7 +32,7 @@ describe('/users endpoint', () => {
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(201)
       expect(responseJson.status).toEqual('success')
-      expect(responseJson.data.registeredUser).toBeDefined()
+      expect(responseJson.data.user.id).toBeDefined()
     })
 
     it('should response 400 when request payload not contain needed property', async () => {
