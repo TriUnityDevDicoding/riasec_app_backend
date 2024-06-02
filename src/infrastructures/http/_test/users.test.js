@@ -100,7 +100,7 @@ describe('/users endpoint', () => {
       expect(responseJson.message).toEqual('cannot create a new user: the email is invalid.')
     })
 
-    it('should response 400 when username unavailable', async () => {
+    it('should response 400 when email unavailable', async () => {
       await UsersTableTestHelper.addUser({ email: 'johndoe@email.com' })
       const requestPayload = {
         fullname: 'John Doe',

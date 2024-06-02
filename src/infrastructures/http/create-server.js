@@ -1,7 +1,9 @@
 const Hapi = require('@hapi/hapi')
+const Jwt = require('@hapi/jwt')
 const ClientError = require('../../commons/exceptions/client-error')
 const DomainErrorTranslator = require('../../commons/exceptions/domain-error-translator')
 const users = require('../../interfaces/http/api/users')
+const authentications = require('../../interfaces/http/api/authentications')
 const config = require('../../commons/config')
 
 const createServer = async container => {
@@ -13,7 +15,33 @@ const createServer = async container => {
 
   await server.register([
     {
+      plugin: Jwt
+    }
+  ])
+
+  server.auth.strategy('riasec_app_backend', 'jwt', {
+    keys: config.jwt.accessTokenKey,
+    verify: {
+      aud: false,
+      iss: false,
+      sub: false,
+      maxAgeSec: config.jwt.accessTokenAge
+    },
+    validate: (artifacts) => ({
+      isValid: true,
+      credentials: {
+        id: artifacts.decoded.payload.id
+      }
+    })
+  })
+
+  await server.register([
+    {
       plugin: users,
+      options: { container }
+    },
+    {
+      plugin: authentications,
       options: { container }
     }
   ])
