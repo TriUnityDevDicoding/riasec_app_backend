@@ -10,7 +10,13 @@ const createServer = async container => {
   const server = Hapi.server({
     host: config.app.host,
     port: config.app.port,
-    debug: config.app.debug
+    debug: config.app.debug,
+    routes: {
+      cors: {
+        origin: [config.app.corsOrigin],
+        headers: ['Accept', 'Content-Type']
+      }
+    }
   })
 
   await server.register([
