@@ -1,25 +1,21 @@
 class UpdateUser {
   constructor (payload) {
     this._verifyPayload(payload)
-    const { fullname, password, dateOfBirth, gender } = payload
+    const { fullname, dateOfBirth, gender } = payload
 
     this.fullname = fullname
-    this.password = password
     this.dateOfBirth = dateOfBirth
     this.gender = gender
   }
 
-  _verifyPayload({ fullname, password, dateOfBirth, gender }) {
-    if (fullname !== undefined && typeof fullname !== 'string') {
-      throw new Error('UPDATE_USER.NOT_MEET_DATA_TYPE_SPECIFICATION')
+  _verifyPayload({ fullname, dateOfBirth, gender }) {
+    const checkGender = !!(gender !== 'Male' && gender !== 'Female')
+
+    if (!fullname || !dateOfBirth || !gender) {
+      throw new Error('UPDATE_USER.NOT_CONTAIN_NEEDED_PROPERTY')
     }
-    if (password !== undefined && typeof password !== 'string') {
-      throw new Error('UPDATE_USER.NOT_MEET_DATA_TYPE_SPECIFICATION')
-    }
-    if (dateOfBirth !== undefined && typeof dateOfBirth !== 'string') {
-      throw new Error('UPDATE_USER.NOT_MEET_DATA_TYPE_SPECIFICATION')
-    }
-    if (gender !== undefined && (gender !== 'Male' && gender !== 'Female')) {
+
+    if (typeof fullname !== 'string' || typeof dateOfBirth !== 'string' || checkGender) {
       throw new Error('UPDATE_USER.NOT_MEET_DATA_TYPE_SPECIFICATION')
     }
   }
