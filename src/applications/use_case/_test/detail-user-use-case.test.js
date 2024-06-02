@@ -5,6 +5,7 @@ const DetailUserUseCase = require('../detail-user-use-case')
 
 describe('DetailUserUseCase', () => {
   it('should orchestrating the detail user action correctly', async () => {
+    const dateOfBirthObj = new Date('2000-03-05')
     const useCasePayload = {
       id: 'user-123'
     }
@@ -12,8 +13,7 @@ describe('DetailUserUseCase', () => {
       id: 'user-123',
       fullname: 'John Doe',
       email: 'johndoe@email.com',
-      password: 'johndoe123',
-      dateOfBirth: new Date('2000-03-05'),
+      dateOfBirth: dateOfBirthObj,
       gender: 'Male'
     }
     const expectedDetailUser = new RegisteredUser({
@@ -25,20 +25,20 @@ describe('DetailUserUseCase', () => {
     })
 
     const mockUserRepository = new UserRepository()
-    const mockDateofBirthParse = new DateOfBirthParse()
+    const mockDateOfBirthParse = new DateOfBirthParse()
 
-    mockUserRepository.getUserById = jest.fn(() => Promise.resolve(expectedDetailUser))
-    mockDateofBirthParse.parseToString = jest.fn(() => Promise.resolve('2000-03-05'))
+    mockUserRepository.getUserById = jest.fn(() => Promise.resolve(userPayloadInDatabase))
+    mockDateOfBirthParse.parseToString = jest.fn(() => Promise.resolve('2000-03-05'))
 
     const detailUserUseCase = new DetailUserUseCase({
       userRepository: mockUserRepository,
-      dateOfBirthParse: mockDateofBirthParse
+      dateOfBirthParse: mockDateOfBirthParse
     })
 
     const detailUser = await detailUserUseCase.execute(useCasePayload)
 
     expect(detailUser).toEqual(expectedDetailUser)
     expect(mockUserRepository.getUserById).toHaveBeenCalledWith(useCasePayload.id)
-    expect(mockDateofBirthParse.parseToString).toHaveBeenCalledWith('2000-03-05')
+    expect(mockDateOfBirthParse.parseToString).toHaveBeenCalledWith(dateOfBirthObj)
   })
 })
