@@ -14,6 +14,7 @@ const config = {
   app: {
     host: process.env.NODE_ENV !== 'production' ? 'localhost' : process.env.HOST,
     port: process.env.PORT,
+    corsOrigin: process.env.CORS_ORIGIN,
     debug: process.env.NODE_ENV === 'development' ? { request: ['error'] } : {}
   },
   jwt: {
