@@ -17,6 +17,7 @@ const ParsingDateOfBirth = require('./security/parsing-date-of-birth')
 // use case
 const AddUserUseCase = require('../applications/use_case/add-user-use-case')
 const DetailUserUseCase = require('../applications/use_case/detail-user-use-case')
+const EditUserUseCase = require('../applications/use_case/edit-user-use-case')
 
 const container = createContainer()
 
@@ -71,6 +72,23 @@ container.register([
   {
     key: DetailUserUseCase.name,
     Class: DetailUserUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'userRepository',
+          internal: UserRepository.name
+        },
+        {
+          name: 'dateOfBirthParse',
+          internal: DateOfBirthParse.name
+        }
+      ]
+    }
+  },
+  {
+    key: EditUserUseCase.name,
+    Class: EditUserUseCase,
     parameter: {
       injectType: 'destructuring',
       dependencies: [
