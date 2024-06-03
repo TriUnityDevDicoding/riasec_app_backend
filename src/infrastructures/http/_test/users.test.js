@@ -158,4 +158,98 @@ describe('/users endpoint', () => {
       expect(responseJson.message).toEqual('user data not found.')
     })
   })
+
+  describe('when PUT /users', () => {
+    it('should response 200 and persisted update user', async () => {
+      const requestPayload = {
+        fullname: 'Maria Doe',
+        dateOfBirth: '1999-03-05',
+        gender: 'Female'
+      }
+      const user = {
+        id: 'user-123'
+      }
+      await UsersTableTestHelper.addUser({ ...user })
+      const server = await createServer(container)
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/users/${user.id}`,
+        payload: requestPayload
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(200)
+      expect(responseJson.status).toEqual('success')
+      expect(responseJson.data).toBeDefined()
+      expect(responseJson.data.user).toBeDefined()
+    })
+
+    it('should response 404 when user not found', async () => {
+      const requestPayload = {
+        fullname: 'Maria Doe',
+        dateOfBirth: '1999-03-05',
+        gender: 'Female'
+      }
+      const server = await createServer(container)
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/users/userId',
+        payload: requestPayload
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(404)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('user failed to update, id not found.')
+    })
+
+    it('should response 400 when request payload not contain needed property', async () => {
+      const requestPayload = {
+        fullname: 'Maria Doe',
+        dateOfBirth: '1999-03-05'
+      }
+      const user = {
+        id: 'user-123'
+      }
+      await UsersTableTestHelper.addUser({ ...user })
+      const server = await createServer(container)
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/users/${user.id}`,
+        payload: requestPayload
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(400)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('cannot update user: the required properties are missing.')
+    })
+
+    it('should response 400 when request payload not meet data type specification', async () => {
+      const requestPayload = {
+        fullname: true,
+        dateOfBirth: '1999-03-05',
+        gender: 'FEMALE'
+      }
+      const user = {
+        id: 'user-123'
+      }
+      await UsersTableTestHelper.addUser({ ...user })
+      const server = await createServer(container)
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/users/${user.id}`,
+        payload: requestPayload
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(400)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('cannot update user: the data type does not match.')
+    })
+  })
 })

@@ -9,7 +9,9 @@ const DomainErrorTranslator = {
 DomainErrorTranslator._directories = {
   'REGISTER_USER.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('cannot create a new user: the required properties are missing.'),
   'REGISTER_USER.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('cannot create a new user: the data type does not match.'),
-  'REGISTER_USER.INVALID_EMAIL_FORMAT': new InvariantError('cannot create a new user: the email is invalid.')
+  'REGISTER_USER.INVALID_EMAIL_FORMAT': new InvariantError('cannot create a new user: the email is invalid.'),
+  'UPDATE_USER.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('cannot update user: the required properties are missing.'),
+  'UPDATE_USER.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('cannot update user: the data type does not match.')
 }
 
 module.exports = DomainErrorTranslator

@@ -8,6 +8,11 @@ const routes = handler => ([
     method: 'GET',
     path: '/users/{userId}',
     handler: handler.getUserByIdHandler
+  },
+  {
+    method: 'PUT',
+    path: '/users/{userId}',
+    handler: handler.putUserByIdHandler
   }
 ])
 
