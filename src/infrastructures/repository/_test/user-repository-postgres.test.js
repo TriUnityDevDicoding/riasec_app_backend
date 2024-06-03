@@ -82,4 +82,46 @@ describe('UserRepositoryPostgres', () => {
       await expect(userRepositoryPostgres.verifyAvailableEmail('johndoe@email.com')).resolves.not.toThrow(InvariantError)
     })
   })
+
+  describe('editUser function', () => {
+    it('should throw NotFoundError when user not found', async () => {
+      const updateUserPayloadInDatabase = {
+        fullname: 'Mia Doe',
+        dateOfBirth: new Date('1999-03-05'),
+        gender: 'Female'
+      }
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      return expect(userRepositoryPostgres.editUser('user-123', updateUserPayloadInDatabase)).rejects.toThrow(NotFoundError)
+    })
+
+    it('should run function editUser correctly and return expected properties', async () => {
+      const userPayloadInDatabase = {
+        id: 'user-123',
+        fullname: 'John Doe',
+        email: 'johndoe@email.com',
+        password: 'johndoe123',
+        dateOfBirth: new Date('2000-03-05'),
+        gender: 'Male'
+      }
+      const updateUserPayloadInDatabase = {
+        fullname: 'Mia Doe',
+        dateOfBirth: new Date('1999-03-05'),
+        gender: 'Female'
+      }
+      await UsersTableTestHelper.addUser({ ...userPayloadInDatabase })
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      const editedUser = await userRepositoryPostgres.editUser(userPayloadInDatabase.id, updateUserPayloadInDatabase)
+
+      expect(editedUser.id).toStrictEqual(userPayloadInDatabase.id)
+      expect(editedUser).toStrictEqual({
+        id: 'user-123',
+        fullname: updateUserPayloadInDatabase.fullname,
+        email: 'johndoe@email.com',
+        dateOfBirth: updateUserPayloadInDatabase.dateOfBirth,
+        gender: updateUserPayloadInDatabase.gender
+      })
+    })
+  })
 })

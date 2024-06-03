@@ -46,6 +46,26 @@ class UserRepositoryPostgres extends UserRepository {
       throw new InvariantError('email is not available.')
     }
   }
+
+  async editUser (id, updateUser) {
+    const { fullname, dateOfBirth, gender } = updateUser
+
+    try {
+      const updatedUser = await this._prisma.user.update({
+        where: {
+          id
+        },
+        data: {
+          full_name: fullname,
+          date_of_birth: dateOfBirth,
+          gender
+        }
+      })
+      return mapDBToRegisteredUser(updatedUser)
+    } catch (error) {
+      throw new NotFoundError('user failed to update, id not found.')
+    }
+  }
 }
 
 module.exports = UserRepositoryPostgres
