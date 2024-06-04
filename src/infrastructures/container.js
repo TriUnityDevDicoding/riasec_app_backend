@@ -136,6 +136,10 @@ container.register([
         {
           name: 'passwordHash',
           internal: PasswordHash.name
+        },
+        {
+          name: 'dateOfBirthParse',
+          internal: DateOfBirthParse.name
         }
       ]
     }

@@ -18,6 +18,18 @@ class UserRepository {
   async getIdByEmail(email) {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
+
+  async getFullNameByEmail(email) {
+    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
+  }
+
+  async getDateOfBirthByEmail(email) {
+    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
+  }
+
+  async getGenderByEmail(email) {
+    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
+  }
 }
 
 module.exports = UserRepository

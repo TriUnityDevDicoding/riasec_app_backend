@@ -80,6 +80,57 @@ class UserRepositoryPostgres extends UserRepository {
 
     return result.id
   }
+
+  async getFullNameByEmail(email) {
+    const result = await this._prisma.user.findUnique({
+      where: {
+        email
+      },
+      select: {
+        full_name: true
+      }
+    })
+
+    if (!result) {
+      throw new InvariantError('Full name not found.')
+    }
+
+    return result.full_name
+  }
+
+  async getDateOfBirthByEmail(email) {
+    const result = await this._prisma.user.findUnique({
+      where: {
+        email
+      },
+      select: {
+        date_of_birth: true
+      }
+    })
+
+    if (!result) {
+      throw new InvariantError('user not found.')
+    }
+
+    return result.date_of_birth
+  }
+
+  async getGenderByEmail(email) {
+    const result = await this._prisma.user.findUnique({
+      where: {
+        email
+      },
+      select: {
+        gender: true
+      }
+    })
+
+    if (!result) {
+      throw new InvariantError('user not found.')
+    }
+
+    return result.gender
+  }
 }
 
 module.exports = UserRepositoryPostgres

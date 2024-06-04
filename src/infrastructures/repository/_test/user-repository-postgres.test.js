@@ -131,4 +131,77 @@ describe('UserRepositoryPostgres', () => {
       expect(userId).toEqual('user-321')
     })
   })
+
+  describe('getFullNameByEmail', () => {
+    it('should throw InvariantError when user not found', async () => {
+      // Arrange
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      // Action & Assert
+      await expect(userRepositoryPostgres.getFullNameByEmail('johndoe@email.com'))
+        .rejects
+        .toThrow(InvariantError)
+    })
+
+    it('should return user fullname correctly', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ email: 'johndoe@email.com', fullname: 'John Doe' })
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      // Action
+      const fullname = await userRepositoryPostgres.getFullNameByEmail('johndoe@email.com')
+
+      // Assert
+      expect(fullname).toEqual('John Doe')
+    })
+  })
+
+  describe('getDateOfBirthByEmail', () => {
+    it('should throw InvariantError when user not found', async () => {
+      // Arrange
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      // Action & Assert
+      await expect(userRepositoryPostgres.getDateOfBirthByEmail('johndoe@email.com'))
+        .rejects
+        .toThrow(InvariantError)
+    })
+
+    it('should return user dateOfBirth correctly', async () => {
+      // Arrange
+      const birthDate = new Date('2000-03-05')
+      await UsersTableTestHelper.addUser({ email: 'johndoe@email.com', dateOfBirth: birthDate })
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      // Action
+      const dateOfBirth = await userRepositoryPostgres.getDateOfBirthByEmail('johndoe@email.com')
+
+      // Assert
+      expect(dateOfBirth).toEqual(birthDate)
+    })
+  })
+
+  describe('getGenderByEmail', () => {
+    it('should throw InvariantError when user not found', async () => {
+      // Arrange
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      // Action & Assert
+      await expect(userRepositoryPostgres.getGenderByEmail('johndoe@email.com'))
+        .rejects
+        .toThrow(InvariantError)
+    })
+
+    it('should return user gender correctly', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ email: 'johndoe@email.com', gender: 'Male' })
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      // Action
+      const gender = await userRepositoryPostgres.getGenderByEmail('johndoe@email.com')
+
+      // Assert
+      expect(gender).toEqual('Male')
+    })
+  })
 })
