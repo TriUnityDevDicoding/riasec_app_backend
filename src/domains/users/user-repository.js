@@ -14,6 +14,14 @@ class UserRepository {
   async editUser (id, updateUser) {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
+
+  async getPasswordByEmail(email) {
+    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
+  }
+
+  async getIdByEmail(email) {
+    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
+  }
 }
 
 module.exports = UserRepository
