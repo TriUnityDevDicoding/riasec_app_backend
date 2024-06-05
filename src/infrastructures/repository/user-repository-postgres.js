@@ -92,7 +92,7 @@ class UserRepositoryPostgres extends UserRepository {
     })
 
     if (!result) {
-      throw new InvariantError('Full name not found.')
+      throw new InvariantError('full name not found.')
     }
 
     return result.full_name
