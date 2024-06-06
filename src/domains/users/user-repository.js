@@ -7,27 +7,11 @@ class UserRepository {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
 
+  async getUserByEmail (email) {
+    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
+  }
+
   async verifyAvailableEmail (email) {
-    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
-  }
-
-  async getPasswordByEmail(email) {
-    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
-  }
-
-  async getIdByEmail(email) {
-    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
-  }
-
-  async getFullNameByEmail(email) {
-    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
-  }
-
-  async getDateOfBirthByEmail(email) {
-    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
-  }
-
-  async getGenderByEmail(email) {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
 }

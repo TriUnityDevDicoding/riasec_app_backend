@@ -35,6 +35,20 @@ class UserRepositoryPostgres extends UserRepository {
     return mapDBToRegisteredUser(findUser)
   }
 
+  async getUserByEmail (email) {
+    const findUser = await this._prisma.user.findUnique({
+      where: {
+        email
+      }
+    })
+
+    if (!findUser) {
+      throw new NotFoundError('user data not found.')
+    }
+
+    return mapDBToRegisteredUser(findUser)
+  }
+
   async verifyAvailableEmail (email) {
     const findUserEmail = await this._prisma.user.findUnique({
       where: {
@@ -45,91 +59,6 @@ class UserRepositoryPostgres extends UserRepository {
     if (findUserEmail) {
       throw new InvariantError('email is not available.')
     }
-  }
-
-  async getPasswordByEmail(email) {
-    const result = await this._prisma.user.findUnique({
-      where: {
-        email
-      },
-      select: {
-        password: true
-      }
-    })
-
-    if (!result) {
-      throw new InvariantError('email not found.')
-    }
-
-    return result.password
-  }
-
-  async getIdByEmail(email) {
-    const result = await this._prisma.user.findUnique({
-      where: {
-        email
-      },
-      select: {
-        id: true
-      }
-    })
-
-    if (!result) {
-      throw new InvariantError('user not found.')
-    }
-
-    return result.id
-  }
-
-  async getFullNameByEmail(email) {
-    const result = await this._prisma.user.findUnique({
-      where: {
-        email
-      },
-      select: {
-        full_name: true
-      }
-    })
-
-    if (!result) {
-      throw new InvariantError('full name not found.')
-    }
-
-    return result.full_name
-  }
-
-  async getDateOfBirthByEmail(email) {
-    const result = await this._prisma.user.findUnique({
-      where: {
-        email
-      },
-      select: {
-        date_of_birth: true
-      }
-    })
-
-    if (!result) {
-      throw new InvariantError('user not found.')
-    }
-
-    return result.date_of_birth
-  }
-
-  async getGenderByEmail(email) {
-    const result = await this._prisma.user.findUnique({
-      where: {
-        email
-      },
-      select: {
-        gender: true
-      }
-    })
-
-    if (!result) {
-      throw new InvariantError('user not found.')
-    }
-
-    return result.gender
   }
 }
 

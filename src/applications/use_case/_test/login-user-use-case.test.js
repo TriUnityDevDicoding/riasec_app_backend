@@ -21,27 +21,25 @@ describe('GetAuthenticationUseCase', () => {
     const mockAuthenticationRepository = new AuthenticationRepository()
     const mockAuthenticationTokenManager = new AuthenticationTokenManager()
     const mockPasswordHash = new PasswordHash()
-    const mockedUserDateOfBirth = new Date('2000-03-05')
     const mockDateofBirthParse = new DateofBirthParse()
 
     // Mocking
     mockDateofBirthParse.parseToString = jest.fn(() => Promise.resolve('2000-03-05'))
-    mockUserRepository.getPasswordByEmail = jest.fn()
-      .mockImplementation(() => Promise.resolve('encrypted_password'))
+    mockUserRepository.getUserByEmail = jest.fn()
+      .mockImplementation(() => Promise.resolve({
+        id: 'user-123',
+        fullname: 'John Doe',
+        email: 'johndoe@email.com',
+        password: 'encrypted_password',
+        dateOfBirth: '2000-03-05',
+        gender: 'Male'
+      }))
     mockPasswordHash.compare = jest.fn()
       .mockImplementation(() => Promise.resolve())
     mockAuthenticationTokenManager.createAccessToken = jest.fn()
       .mockImplementation(() => Promise.resolve(mockedAuthentication.accessToken))
     mockAuthenticationTokenManager.createRefreshToken = jest.fn()
       .mockImplementation(() => Promise.resolve(mockedAuthentication.refreshToken))
-    mockUserRepository.getIdByEmail = jest.fn()
-      .mockImplementation(() => Promise.resolve('user-123'))
-    mockUserRepository.getFullNameByEmail = jest.fn()
-      .mockImplementation(() => Promise.resolve('John Doe'))
-    mockUserRepository.getDateOfBirthByEmail = jest.fn()
-      .mockImplementation(() => Promise.resolve(mockedUserDateOfBirth))
-    mockUserRepository.getGenderByEmail = jest.fn()
-      .mockImplementation(() => Promise.resolve('Male'))
     mockAuthenticationRepository.addToken = jest.fn()
       .mockImplementation(() => Promise.resolve())
 
@@ -62,23 +60,27 @@ describe('GetAuthenticationUseCase', () => {
       accessToken: 'access_token',
       refreshToken: 'refresh_token'
     }))
-    expect(mockDateofBirthParse.parseToString).toHaveBeenCalledWith(mockedUserDateOfBirth)
-    expect(mockUserRepository.getPasswordByEmail)
+    expect(mockDateofBirthParse.parseToString).toHaveBeenCalledWith('2000-03-05')
+    expect(mockUserRepository.getUserByEmail)
       .toHaveBeenCalledWith('johndoe@email.com')
     expect(mockPasswordHash.compare)
       .toHaveBeenCalledWith('secret', 'encrypted_password')
-    expect(mockUserRepository.getIdByEmail)
-      .toHaveBeenCalledWith('johndoe@email.com')
-    expect(mockUserRepository.getFullNameByEmail)
-      .toHaveBeenCalledWith('johndoe@email.com')
-    expect(mockUserRepository.getDateOfBirthByEmail)
-      .toHaveBeenCalledWith('johndoe@email.com')
-    expect(mockUserRepository.getGenderByEmail)
-      .toHaveBeenCalledWith('johndoe@email.com')
     expect(mockAuthenticationTokenManager.createAccessToken)
-      .toHaveBeenCalledWith({ email: 'johndoe@email.com', id: 'user-123', fullname: 'John Doe', dateOfBirth: '2000-03-05', gender: 'Male' })
+      .toHaveBeenCalledWith({
+        email: 'johndoe@email.com',
+        id: 'user-123',
+        fullname: 'John Doe',
+        dateOfBirth: '2000-03-05',
+        gender: 'Male'
+      })
     expect(mockAuthenticationTokenManager.createRefreshToken)
-      .toHaveBeenCalledWith({ email: 'johndoe@email.com', id: 'user-123', fullname: 'John Doe', dateOfBirth: '2000-03-05', gender: 'Male' })
+      .toHaveBeenCalledWith({
+        email: 'johndoe@email.com',
+        id: 'user-123',
+        fullname: 'John Doe',
+        dateOfBirth: '2000-03-05',
+        gender: 'Male'
+      })
     expect(mockAuthenticationRepository.addToken)
       .toHaveBeenCalledWith(mockedAuthentication.refreshToken)
   })
