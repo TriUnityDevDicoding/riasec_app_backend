@@ -6,24 +6,30 @@ class LoginUserUseCase {
     userRepository,
     authenticationRepository,
     authenticationTokenManager,
-    passwordHash
+    passwordHash,
+    dateOfBirthParse
   }) {
     this._userRepository = userRepository
     this._authenticationRepository = authenticationRepository
     this._authenticationTokenManager = authenticationTokenManager
     this._passwordHash = passwordHash
+    this._dateOfBirthParse = dateOfBirthParse
   }
 
   async execute(useCasePayload) {
     const { email, password } = new UserLogin(useCasePayload)
-    const encryptedPassword = await this._userRepository.getPasswordByEmail(email)
+    const user = await this._userRepository.getUserByEmail(email)
+    const encryptedPassword = user.password
     await this._passwordHash.compare(password, encryptedPassword)
-    const id = await this._userRepository.getIdByEmail(email)
+    const id = user.id
+    const fullname = user.fullname
+    const dateOfBirth = await this._dateOfBirthParse.parseToString(user.dateOfBirth)
+    const gender = user.gender
 
     const accessToken = await this._authenticationTokenManager
-      .createAccessToken({ email, id })
+      .createAccessToken({ email, id, fullname, dateOfBirth, gender })
     const refreshToken = await this._authenticationTokenManager
-      .createRefreshToken({ email, id })
+      .createRefreshToken({ email, id, fullname, dateOfBirth, gender })
 
     const newAuthentication = new NewAuthentication({
       accessToken,
