@@ -1,15 +1,48 @@
 const prisma = require('../../database/client/prisma-client')
 const UsersTableTestHelper = require('../../../../tests/users-table-test-helper')
+const AuthenticationsTableTestHelper = require('../../../../tests/authentications-table-test-helper')
 const container = require('../../container')
 const createServer = require('../create-server')
 
 describe('/users endpoint', () => {
+  let server
+  let accessToken
+  let addedUser
+  const userPayload = {
+    fullname: 'Michael Doe',
+    email: 'michael@email.com',
+    password: 'michaeldoe123',
+    dateOfBirth: '2000-09-15',
+    gender: 'Male'
+  }
+
+  beforeEach(async () => {
+    server = await createServer(container)
+
+    const users = await server.inject({
+      method: 'POST',
+      url: '/users',
+      payload: userPayload
+    })
+    addedUser = JSON.parse(users.payload).data.user
+    const authentications = await server.inject({
+      method: 'POST',
+      url: '/authentications',
+      payload: {
+        email: userPayload.email,
+        password: userPayload.password
+      }
+    })
+    accessToken = JSON.parse(authentications.payload).data.accessToken
+  })
+
   afterAll(async () => {
     await prisma.$disconnect()
   })
 
   afterEach(async () => {
     await UsersTableTestHelper.cleanTable()
+    await AuthenticationsTableTestHelper.cleanTable()
   })
 
   describe('when POST /users', () => {
@@ -21,7 +54,6 @@ describe('/users endpoint', () => {
         dateOfBirth: '2000-03-05',
         gender: 'Male'
       }
-      const server = await createServer(container)
 
       const response = await server.inject({
         method: 'POST',
@@ -42,7 +74,6 @@ describe('/users endpoint', () => {
         dateOfBirth: 'johndoe123',
         gender: 'Male'
       }
-      const server = await createServer(container)
 
       const response = await server.inject({
         method: 'POST',
@@ -64,7 +95,6 @@ describe('/users endpoint', () => {
         dateOfBirth: 'March 5th',
         gender: 'Man'
       }
-      const server = await createServer(container)
 
       const response = await server.inject({
         method: 'POST',
@@ -86,7 +116,6 @@ describe('/users endpoint', () => {
         dateOfBirth: 'johndoe123',
         gender: 'Male'
       }
-      const server = await createServer(container)
 
       const response = await server.inject({
         method: 'POST',
@@ -109,7 +138,6 @@ describe('/users endpoint', () => {
         dateOfBirth: 'johndoe123',
         gender: 'Male'
       }
-      const server = await createServer(container)
 
       const response = await server.inject({
         method: 'POST',
@@ -130,7 +158,6 @@ describe('/users endpoint', () => {
         id: 'user-123'
       }
       await UsersTableTestHelper.addUser({ ...user })
-      const server = await createServer(container)
 
       const response = await server.inject({
         method: 'GET',
@@ -145,8 +172,6 @@ describe('/users endpoint', () => {
     })
 
     it('should response 404 when user not found', async () => {
-      const server = await createServer(container)
-
       const response = await server.inject({
         method: 'GET',
         url: '/users/userId'
@@ -166,16 +191,14 @@ describe('/users endpoint', () => {
         dateOfBirth: '1999-03-05',
         gender: 'Female'
       }
-      const user = {
-        id: 'user-123'
-      }
-      await UsersTableTestHelper.addUser({ ...user })
-      const server = await createServer(container)
 
       const response = await server.inject({
         method: 'PUT',
-        url: `/users/${user.id}`,
-        payload: requestPayload
+        url: `/users/${addedUser.id}`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
       })
 
       const responseJson = JSON.parse(response.payload)
@@ -185,18 +208,66 @@ describe('/users endpoint', () => {
       expect(responseJson.data.user).toBeDefined()
     })
 
-    it('should response 404 when user not found', async () => {
+    it('should response 403 when user does not belong to credential user', async () => {
       const requestPayload = {
         fullname: 'Maria Doe',
         dateOfBirth: '1999-03-05',
         gender: 'Female'
       }
-      const server = await createServer(container)
+      const userDummy = {
+        id: 'user-111'
+      }
+      await UsersTableTestHelper.addUser({ ...userDummy })
 
       const response = await server.inject({
         method: 'PUT',
-        url: '/users/userId',
-        payload: requestPayload
+        url: `/users/${userDummy.id}`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(403)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('this user does not belong to credential user.')
+    })
+
+    it('should response 401 when user does not login', async () => {
+      const requestPayload = {
+        fullname: 'Maria Doe',
+        dateOfBirth: '1999-03-05',
+        gender: 'Female'
+      }
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/users/${addedUser.id}`,
+        payload: requestPayload,
+        headers: {
+          Authorization: 'Bearer accessToken'
+        }
+      })
+
+      expect(response.statusCode).toStrictEqual(401)
+    })
+
+    it('should response 404 when user not found', async () => {
+      await UsersTableTestHelper.deleteUserByid(addedUser.id)
+      const requestPayload = {
+        fullname: 'Maria Doe',
+        dateOfBirth: '1999-03-05',
+        gender: 'Female'
+      }
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/users/${addedUser.id}`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
       })
 
       const responseJson = JSON.parse(response.payload)
@@ -210,16 +281,14 @@ describe('/users endpoint', () => {
         fullname: 'Maria Doe',
         dateOfBirth: '1999-03-05'
       }
-      const user = {
-        id: 'user-123'
-      }
-      await UsersTableTestHelper.addUser({ ...user })
-      const server = await createServer(container)
 
       const response = await server.inject({
         method: 'PUT',
-        url: `/users/${user.id}`,
-        payload: requestPayload
+        url: `/users/${addedUser.id}`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
       })
 
       const responseJson = JSON.parse(response.payload)
@@ -234,16 +303,14 @@ describe('/users endpoint', () => {
         dateOfBirth: '1999-03-05',
         gender: 'FEMALE'
       }
-      const user = {
-        id: 'user-123'
-      }
-      await UsersTableTestHelper.addUser({ ...user })
-      const server = await createServer(container)
 
       const response = await server.inject({
         method: 'PUT',
-        url: `/users/${user.id}`,
-        payload: requestPayload
+        url: `/users/${addedUser.id}`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
       })
 
       const responseJson = JSON.parse(response.payload)

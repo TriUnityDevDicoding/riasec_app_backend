@@ -6,6 +6,7 @@ const EditUserUseCase = require('../edit-user-use-case')
 
 describe('EditUserUseCase', () => {
   it('should orchestrating the edit user action correctly', async () => {
+    const userIdCredentials = 'user-123'
     const dateOfBirthObj = new Date('2000-03-05')
     const useCaseParams = {
       id: 'user-123'
@@ -42,11 +43,11 @@ describe('EditUserUseCase', () => {
       dateOfBirthParse: mockDateOfBirthParse
     })
 
-    const editedUser = await editUserUseCase.execute(useCaseParams, useCasePayload)
+    const editedUser = await editUserUseCase.execute(useCaseParams, userIdCredentials, useCasePayload)
 
     expect(editedUser).toEqual(expectedUpdatedUser)
     expect(mockDateOfBirthParse.parseToDate).toHaveBeenCalledWith(useCasePayload.dateOfBirth)
-    expect(mockUserRepository.editUser).toHaveBeenCalledWith(useCaseParams.id, {
+    expect(mockUserRepository.editUser).toHaveBeenCalledWith(useCaseParams.id, userIdCredentials, {
       fullname: useCasePayload.fullname,
       dateOfBirth: dateOfBirthObj,
       gender: useCasePayload.gender

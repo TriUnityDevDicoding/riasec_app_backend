@@ -12,7 +12,10 @@ const routes = handler => ([
   {
     method: 'PUT',
     path: '/users/{userId}',
-    handler: handler.putUserByIdHandler
+    handler: handler.putUserByIdHandler,
+    options: {
+      auth: 'riasec_app_backend'
+    }
   }
 ])
 

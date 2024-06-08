@@ -1,4 +1,5 @@
 const UsersTableTestHelper = require('../../../../tests/users-table-test-helper')
+const AuthorizationError = require('../../../commons/exceptions/authorization-error')
 const InvariantError = require('../../../commons/exceptions/invariant-error')
 const NotFoundError = require('../../../commons/exceptions/not-found-error')
 const prisma = require('../../database/client/prisma-client')
@@ -84,7 +85,8 @@ describe('UserRepositoryPostgres', () => {
   })
 
   describe('editUser function', () => {
-    it('should throw NotFoundError when user not found', async () => {
+    it('should throw AuthorizationError when user does not belong to credential user', async () => {
+      const userIdCredentials = 'user-111'
       const updateUserPayloadInDatabase = {
         fullname: 'Mia Doe',
         dateOfBirth: new Date('1999-03-05'),
@@ -92,10 +94,35 @@ describe('UserRepositoryPostgres', () => {
       }
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
 
-      return expect(userRepositoryPostgres.editUser('user-123', updateUserPayloadInDatabase)).rejects.toThrow(NotFoundError)
+      return expect(userRepositoryPostgres.editUser('user-123', userIdCredentials, updateUserPayloadInDatabase)).rejects.toThrow(AuthorizationError)
+    })
+
+    it('should throw NotFoundError when user not found', async () => {
+      const userIdCredentials = 'user-123'
+      const updateUserPayloadInDatabase = {
+        fullname: 'Mia Doe',
+        dateOfBirth: new Date('1999-03-05'),
+        gender: 'Female'
+      }
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      return expect(userRepositoryPostgres.editUser('user-123', userIdCredentials, updateUserPayloadInDatabase)).rejects.toThrow(NotFoundError)
+    })
+
+    it('should throw InvariantError when inappropriate payload', async () => {
+      const userIdCredentials = 'user-123'
+      const updateUserPayloadInDatabase = {
+        fullname: 'Mia Doe',
+        dateOfBirth: '1999-03-05',
+        gender: 'Female'
+      }
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      return expect(userRepositoryPostgres.editUser('user-123', userIdCredentials, updateUserPayloadInDatabase)).rejects.toThrow(InvariantError)
     })
 
     it('should run function editUser correctly and return expected properties', async () => {
+      const userIdCredentials = 'user-123'
       const userPayloadInDatabase = {
         id: 'user-123',
         fullname: 'John Doe',
@@ -112,7 +139,7 @@ describe('UserRepositoryPostgres', () => {
       await UsersTableTestHelper.addUser({ ...userPayloadInDatabase })
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
 
-      const editedUser = await userRepositoryPostgres.editUser(userPayloadInDatabase.id, updateUserPayloadInDatabase)
+      const editedUser = await userRepositoryPostgres.editUser(userPayloadInDatabase.id, userIdCredentials, updateUserPayloadInDatabase)
 
       expect(editedUser.id).toStrictEqual(userPayloadInDatabase.id)
       expect(editedUser).toStrictEqual({

@@ -43,9 +43,11 @@ class UsersHandler {
   }
 
   async putUserByIdHandler (request, h) {
+    const userId = request.auth.credentials.id
+    const { payload } = request
     const params = { id: request.params.userId }
     const editUserUseCase = this._container.getInstance(EditUserUseCase.name)
-    const editedUser = await editUserUseCase.execute(params, request.payload)
+    const editedUser = await editUserUseCase.execute(params, userId, payload)
 
     const response = h.response({
       status: 'success',

@@ -16,7 +16,7 @@ class AuthenticationsHandler {
     const { accessToken, refreshToken } = await loginUserUseCase.execute(request.payload)
     const response = h.response({
       status: 'success',
-      message: 'user logged in successfully',
+      message: 'user logged in successfully.',
       data: {
         accessToken,
         refreshToken
@@ -33,7 +33,7 @@ class AuthenticationsHandler {
 
     return {
       status: 'success',
-      message: 'user refreshed token successfully',
+      message: 'user refreshed token successfully.',
       data: {
         accessToken
       }
@@ -45,7 +45,7 @@ class AuthenticationsHandler {
     await logoutUserUseCase.execute(request.payload)
     return {
       status: 'success',
-      message: 'user logged out successfully'
+      message: 'user logged out successfully.'
     }
   }
 }

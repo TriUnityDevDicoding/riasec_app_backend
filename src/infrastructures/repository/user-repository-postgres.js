@@ -1,3 +1,4 @@
+const AuthorizationError = require('../../commons/exceptions/authorization-error')
 const InvariantError = require('../../commons/exceptions/invariant-error')
 const NotFoundError = require('../../commons/exceptions/not-found-error')
 const UserRepository = require('../../domains/users/user-repository')
@@ -47,8 +48,12 @@ class UserRepositoryPostgres extends UserRepository {
     }
   }
 
-  async editUser (id, updateUser) {
+  async editUser (id, userIdCredentials, updateUser) {
     const { fullname, dateOfBirth, gender } = updateUser
+
+    if (id !== userIdCredentials) {
+      throw new AuthorizationError('this user does not belong to credential user.')
+    }
 
     try {
       const updatedUser = await this._prisma.user.update({
@@ -63,7 +68,10 @@ class UserRepositoryPostgres extends UserRepository {
       })
       return mapDBToRegisteredUser(updatedUser)
     } catch (error) {
-      throw new NotFoundError('user failed to update, id not found.')
+      if (error.code === 'P2025') {
+        throw new NotFoundError('user failed to update, id not found.')
+      }
+      throw new InvariantError('an unexpected error occured.')
     }
   }
 
