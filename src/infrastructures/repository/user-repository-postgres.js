@@ -1,3 +1,4 @@
+const AuthorizationError = require('../../commons/exceptions/authorization-error')
 const InvariantError = require('../../commons/exceptions/invariant-error')
 const NotFoundError = require('../../commons/exceptions/not-found-error')
 const UserRepository = require('../../domains/users/user-repository')
@@ -59,6 +60,67 @@ class UserRepositoryPostgres extends UserRepository {
     if (findUserEmail) {
       throw new InvariantError('email is not available.')
     }
+  }
+
+  async editUser (id, userIdCredentials, updateUser) {
+    const { fullname, dateOfBirth, gender } = updateUser
+
+    if (id !== userIdCredentials) {
+      throw new AuthorizationError('this user does not belong to credential user.')
+    }
+
+    try {
+      const updatedUser = await this._prisma.user.update({
+        where: {
+          id
+        },
+        data: {
+          full_name: fullname,
+          date_of_birth: dateOfBirth,
+          gender
+        }
+      })
+      return mapDBToRegisteredUser(updatedUser)
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundError('user failed to update, id not found.')
+      }
+      throw new InvariantError('an unexpected error occured.')
+    }
+  }
+
+  async getPasswordByEmail(email) {
+    const result = await this._prisma.user.findUnique({
+      where: {
+        email
+      },
+      select: {
+        password: true
+      }
+    })
+
+    if (!result) {
+      throw new InvariantError('email not found.')
+    }
+
+    return result.password
+  }
+
+  async getIdByEmail(email) {
+    const result = await this._prisma.user.findUnique({
+      where: {
+        email
+      },
+      select: {
+        id: true
+      }
+    })
+
+    if (!result) {
+      throw new InvariantError('user not found.')
+    }
+
+    return result.id
   }
 }
 

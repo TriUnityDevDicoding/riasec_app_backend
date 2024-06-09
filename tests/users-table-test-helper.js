@@ -24,6 +24,14 @@ const UsersTableTestHelper = {
     return user
   },
 
+  async deleteUserByid (id) {
+    await prisma.user.delete({
+      where: {
+        id
+      }
+    })
+  },
+
   async cleanTable () {
     await prisma.user.deleteMany({ where: {} })
   }

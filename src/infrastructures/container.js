@@ -22,6 +22,7 @@ const JwtTokenManager = require('./security/jwt-token-manager')
 // use case
 const AddUserUseCase = require('../applications/use_case/add-user-use-case')
 const DetailUserUseCase = require('../applications/use_case/detail-user-use-case')
+const EditUserUseCase = require('../applications/use_case/edit-user-use-case')
 const LoginUserUseCase = require('../applications/use_case/login-user-use-case')
 const LogoutUserUseCase = require('../applications/use_case/logout-user-use-case')
 const RefreshAuthenticationUseCase = require('../applications/use_case/refresh-authentication-use-case')
@@ -101,6 +102,23 @@ container.register([
   {
     key: DetailUserUseCase.name,
     Class: DetailUserUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'userRepository',
+          internal: UserRepository.name
+        },
+        {
+          name: 'dateOfBirthParse',
+          internal: DateOfBirthParse.name
+        }
+      ]
+    }
+  },
+  {
+    key: EditUserUseCase.name,
+    Class: EditUserUseCase,
     parameter: {
       injectType: 'destructuring',
       dependencies: [

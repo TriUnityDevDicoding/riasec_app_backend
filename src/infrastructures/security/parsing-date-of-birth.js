@@ -1,6 +1,6 @@
 const DateOfBirthParse = require('../../applications/security/date-of-birth-parse')
 
-class BcryptPasswordHash extends DateOfBirthParse {
+class ParsingDateOfBirth extends DateOfBirthParse {
   async parseToDate (dateOfBirthString) {
     return new Date(dateOfBirthString)
   }
@@ -16,4 +16,4 @@ class BcryptPasswordHash extends DateOfBirthParse {
   }
 }
 
-module.exports = BcryptPasswordHash
+module.exports = ParsingDateOfBirth
