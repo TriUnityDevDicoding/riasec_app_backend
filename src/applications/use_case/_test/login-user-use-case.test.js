@@ -2,6 +2,7 @@ const UserRepository = require('../../../domains/users/user-repository')
 const AuthenticationRepository = require('../../../domains/authentications/authentication-repository')
 const AuthenticationTokenManager = require('../../security/authentication-token-manager')
 const PasswordHash = require('../../security/password-hash')
+const DateofBirthParse = require('../../security/date-of-birth-parse')
 const LoginUserUseCase = require('../login-user-use-case')
 const NewAuth = require('../../../domains/authentications/entities/new-auth')
 
@@ -20,18 +21,25 @@ describe('GetAuthenticationUseCase', () => {
     const mockAuthenticationRepository = new AuthenticationRepository()
     const mockAuthenticationTokenManager = new AuthenticationTokenManager()
     const mockPasswordHash = new PasswordHash()
+    const mockDateofBirthParse = new DateofBirthParse()
 
     // Mocking
-    mockUserRepository.getPasswordByEmail = jest.fn()
-      .mockImplementation(() => Promise.resolve('encrypted_password'))
+    mockDateofBirthParse.parseToString = jest.fn(() => Promise.resolve('2000-03-05'))
+    mockUserRepository.getUserByEmail = jest.fn()
+      .mockImplementation(() => Promise.resolve({
+        id: 'user-123',
+        fullname: 'John Doe',
+        email: 'johndoe@email.com',
+        password: 'encrypted_password',
+        dateOfBirth: '2000-03-05',
+        gender: 'Male'
+      }))
     mockPasswordHash.compare = jest.fn()
       .mockImplementation(() => Promise.resolve())
     mockAuthenticationTokenManager.createAccessToken = jest.fn()
       .mockImplementation(() => Promise.resolve(mockedAuthentication.accessToken))
     mockAuthenticationTokenManager.createRefreshToken = jest.fn()
       .mockImplementation(() => Promise.resolve(mockedAuthentication.refreshToken))
-    mockUserRepository.getIdByEmail = jest.fn()
-      .mockImplementation(() => Promise.resolve('user-123'))
     mockAuthenticationRepository.addToken = jest.fn()
       .mockImplementation(() => Promise.resolve())
 
@@ -40,7 +48,8 @@ describe('GetAuthenticationUseCase', () => {
       userRepository: mockUserRepository,
       authenticationRepository: mockAuthenticationRepository,
       authenticationTokenManager: mockAuthenticationTokenManager,
-      passwordHash: mockPasswordHash
+      passwordHash: mockPasswordHash,
+      dateOfBirthParse: mockDateofBirthParse
     })
 
     // Action
@@ -51,16 +60,27 @@ describe('GetAuthenticationUseCase', () => {
       accessToken: 'access_token',
       refreshToken: 'refresh_token'
     }))
-    expect(mockUserRepository.getPasswordByEmail)
+    expect(mockDateofBirthParse.parseToString).toHaveBeenCalledWith('2000-03-05')
+    expect(mockUserRepository.getUserByEmail)
       .toHaveBeenCalledWith('johndoe@email.com')
     expect(mockPasswordHash.compare)
       .toHaveBeenCalledWith('secret', 'encrypted_password')
-    expect(mockUserRepository.getIdByEmail)
-      .toHaveBeenCalledWith('johndoe@email.com')
     expect(mockAuthenticationTokenManager.createAccessToken)
-      .toHaveBeenCalledWith({ email: 'johndoe@email.com', id: 'user-123' })
+      .toHaveBeenCalledWith({
+        email: 'johndoe@email.com',
+        id: 'user-123',
+        fullname: 'John Doe',
+        dateOfBirth: '2000-03-05',
+        gender: 'Male'
+      })
     expect(mockAuthenticationTokenManager.createRefreshToken)
-      .toHaveBeenCalledWith({ email: 'johndoe@email.com', id: 'user-123' })
+      .toHaveBeenCalledWith({
+        email: 'johndoe@email.com',
+        id: 'user-123',
+        fullname: 'John Doe',
+        dateOfBirth: '2000-03-05',
+        gender: 'Male'
+      })
     expect(mockAuthenticationRepository.addToken)
       .toHaveBeenCalledWith(mockedAuthentication.refreshToken)
   })

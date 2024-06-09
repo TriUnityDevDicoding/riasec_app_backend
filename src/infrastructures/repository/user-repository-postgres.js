@@ -36,6 +36,20 @@ class UserRepositoryPostgres extends UserRepository {
     return mapDBToRegisteredUser(findUser)
   }
 
+  async getUserByEmail (email) {
+    const findUser = await this._prisma.user.findUnique({
+      where: {
+        email
+      }
+    })
+
+    if (!findUser) {
+      throw new NotFoundError('user data not found.')
+    }
+
+    return mapDBToRegisteredUser(findUser)
+  }
+
   async verifyAvailableEmail (email) {
     const findUserEmail = await this._prisma.user.findUnique({
       where: {

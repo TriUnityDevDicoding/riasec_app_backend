@@ -69,6 +69,40 @@ describe('UserRepositoryPostgres', () => {
     })
   })
 
+  describe('getUserByEmail function', () => {
+    it('should throw NotFoundError when user not found.', async () => {
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      return expect(userRepositoryPostgres.getUserByEmail('johndoe@email.com')).rejects.toThrow(NotFoundError)
+    })
+
+    it('should run function getUserByEmail correctly and return expected properties', async () => {
+      const userPayloadInDatabase = {
+        id: 'user-123',
+        fullname: 'John Doe',
+        email: 'johndoe@email.com',
+        password: 'johndoe123',
+        dateOfBirth: new Date('2000-03-05'),
+        gender: 'Male'
+      }
+      await UsersTableTestHelper.addUser({ ...userPayloadInDatabase })
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      const detailUser = await userRepositoryPostgres.getUserByEmail(userPayloadInDatabase.email)
+
+      expect(detailUser.id).toStrictEqual(userPayloadInDatabase.id)
+      expect(detailUser.fullname).toStrictEqual(userPayloadInDatabase.fullname)
+      expect(detailUser.email).toStrictEqual(userPayloadInDatabase.email)
+      expect(detailUser.dateOfBirth).toStrictEqual(userPayloadInDatabase.dateOfBirth)
+      expect(detailUser.gender).toStrictEqual(userPayloadInDatabase.gender)
+      expect(detailUser).toHaveProperty('id')
+      expect(detailUser).toHaveProperty('fullname')
+      expect(detailUser).toHaveProperty('email')
+      expect(detailUser).toHaveProperty('dateOfBirth')
+      expect(detailUser).toHaveProperty('gender')
+    })
+  })
+
   describe('verifyAvailableEmail function', () => {
     it('should throw InvariantError when email not available', async () => {
       await UsersTableTestHelper.addUser({ email: 'johndoe@email.com' })
@@ -146,6 +180,7 @@ describe('UserRepositoryPostgres', () => {
         id: 'user-123',
         fullname: updateUserPayloadInDatabase.fullname,
         email: 'johndoe@email.com',
+        password: userPayloadInDatabase.password,
         dateOfBirth: updateUserPayloadInDatabase.dateOfBirth,
         gender: updateUserPayloadInDatabase.gender
       })
