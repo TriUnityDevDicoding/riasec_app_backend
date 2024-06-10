@@ -154,14 +154,17 @@ describe('/users endpoint', () => {
 
   describe('when GET /users', () => {
     it('should response 200 and persisted detail user', async () => {
-      const user = {
-        id: 'user-123'
-      }
-      await UsersTableTestHelper.addUser({ ...user })
+      // const user = {
+      //   id: 'user-123'
+      // }
+      // await UsersTableTestHelper.addUser({ ...user })
 
       const response = await server.inject({
         method: 'GET',
-        url: `/users/${user.id}`
+        url: `/users/${addedUser.id}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
       })
 
       const responseJson = JSON.parse(response.payload)
@@ -171,10 +174,46 @@ describe('/users endpoint', () => {
       expect(responseJson.data.user).toBeDefined()
     })
 
-    it('should response 404 when user not found', async () => {
+    it('should response 403 when user does not belong to credential user', async () => {
+      const userDummy = {
+        id: 'user-111'
+      }
+      await UsersTableTestHelper.addUser({ ...userDummy })
+
       const response = await server.inject({
         method: 'GET',
-        url: '/users/userId'
+        url: `/users/${userDummy.id}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(403)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('this user does not belong to credential user.')
+    })
+
+    it('should response 401 when user does not login', async () => {
+      const response = await server.inject({
+        method: 'GET',
+        url: '/users/userId',
+        headers: {
+          Authorization: 'Bearer accessToken'
+        }
+      })
+
+      expect(response.statusCode).toStrictEqual(401)
+    })
+
+    it('should response 404 when user not found', async () => {
+      await UsersTableTestHelper.deleteUserByid(addedUser.id)
+      const response = await server.inject({
+        method: 'GET',
+        url: `/users/${addedUser.id}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
       })
 
       const responseJson = JSON.parse(response.payload)

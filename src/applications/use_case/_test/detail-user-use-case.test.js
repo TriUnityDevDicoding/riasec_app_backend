@@ -5,6 +5,7 @@ const DetailUserUseCase = require('../detail-user-use-case')
 
 describe('DetailUserUseCase', () => {
   it('should orchestrating the detail user action correctly', async () => {
+    const userIdCredentials = 'user-123'
     const dateOfBirthObj = new Date('2000-03-05')
     const useCasePayload = {
       id: 'user-123'
@@ -35,10 +36,10 @@ describe('DetailUserUseCase', () => {
       dateOfBirthParse: mockDateOfBirthParse
     })
 
-    const detailUser = await detailUserUseCase.execute(useCasePayload)
+    const detailUser = await detailUserUseCase.execute(useCasePayload, userIdCredentials)
 
-    expect(detailUser).toEqual(expectedDetailUser)
-    expect(mockUserRepository.getUserById).toHaveBeenCalledWith(useCasePayload.id)
+    expect(detailUser).toStrictEqual(expectedDetailUser)
+    expect(mockUserRepository.getUserById).toHaveBeenCalledWith(useCasePayload.id, userIdCredentials)
     expect(mockDateOfBirthParse.parseToString).toHaveBeenCalledWith(dateOfBirthObj)
   })
 })
