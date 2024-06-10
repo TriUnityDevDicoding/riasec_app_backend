@@ -154,11 +154,6 @@ describe('/users endpoint', () => {
 
   describe('when GET /users', () => {
     it('should response 200 and persisted detail user', async () => {
-      // const user = {
-      //   id: 'user-123'
-      // }
-      // await UsersTableTestHelper.addUser({ ...user })
-
       const response = await server.inject({
         method: 'GET',
         url: `/users/${addedUser.id}`,
