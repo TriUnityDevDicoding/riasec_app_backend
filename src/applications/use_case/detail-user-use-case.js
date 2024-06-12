@@ -1,16 +1,18 @@
+const RegisteredUser = require('../../domains/users/entities/registered-user')
+
 class DetailUserUseCase {
   constructor ({ userRepository, dateOfBirthParse }) {
     this._userRepository = userRepository
     this._dateOfBirthParse = dateOfBirthParse
   }
 
-  async execute (useCasePayload) {
-    const { id } = useCasePayload
+  async execute (useCaseParams, userIdCredentials) {
+    const { id } = useCaseParams
 
-    const detailUser = await this._userRepository.getUserById(id)
+    const detailUser = await this._userRepository.getUserById(id, userIdCredentials)
     detailUser.dateOfBirth = await this._dateOfBirthParse.parseToString(detailUser.dateOfBirth)
 
-    return detailUser
+    return new RegisteredUser(detailUser)
   }
 }
 

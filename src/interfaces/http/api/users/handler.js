@@ -27,9 +27,10 @@ class UsersHandler {
   }
 
   async getUserByIdHandler (request, h) {
-    const payload = { id: request.params.userId }
+    const params = { id: request.params.userId }
+    const userId = request.auth.credentials.id
     const detailUserUseCase = this._container.getInstance(DetailUserUseCase.name)
-    const detailUser = await detailUserUseCase.execute(payload)
+    const detailUser = await detailUserUseCase.execute(params, userId)
 
     const response = h.response({
       status: 'success',

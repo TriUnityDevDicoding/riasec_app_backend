@@ -36,13 +36,22 @@ describe('UserRepositoryPostgres', () => {
   })
 
   describe('getUserById function', () => {
-    it('should throw NotFoundError when user not found.', async () => {
+    it('should throw AuthorizationError when user does not belong to credential user', async () => {
+      const userIdCredentials = 'user-111'
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
 
-      return expect(userRepositoryPostgres.getUserById('user-123')).rejects.toThrow(NotFoundError)
+      return expect(userRepositoryPostgres.getUserById('user-123', userIdCredentials)).rejects.toThrow(AuthorizationError)
+    })
+
+    it('should throw NotFoundError when user not found.', async () => {
+      const userIdCredentials = 'user-123'
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      return expect(userRepositoryPostgres.getUserById('user-123', userIdCredentials)).rejects.toThrow(NotFoundError)
     })
 
     it('should run function getUserById correctly and return expected properties', async () => {
+      const userIdCredentials = 'user-123'
       const userPayloadInDatabase = {
         id: 'user-123',
         fullname: 'John Doe',
@@ -54,7 +63,7 @@ describe('UserRepositoryPostgres', () => {
       await UsersTableTestHelper.addUser({ ...userPayloadInDatabase })
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
 
-      const detailUser = await userRepositoryPostgres.getUserById(userPayloadInDatabase.id)
+      const detailUser = await userRepositoryPostgres.getUserById(userPayloadInDatabase.id, userIdCredentials)
 
       expect(detailUser.id).toStrictEqual(userPayloadInDatabase.id)
       expect(detailUser.fullname).toStrictEqual(userPayloadInDatabase.fullname)
