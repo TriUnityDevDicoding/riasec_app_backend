@@ -5,12 +5,12 @@
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
-    "start:dev": "nodemon src/app.js",
-    "test": "jest --setupFiles dotenv/config -i",
-    "test:watch:change": "jest --watch --setupFiles dotenv/config -i",
-    "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config -i",
+    "start:dev": "NODE_ENV=development nodemon src/app.js",
+    "test": "dotenv -e .test.env -- jest --setupFiles dotenv/config -i",
+    "test:watch:change": "dotenv -e .test.env -- jest --watch --setupFiles dotenv/config -i",
+    "test:watch": "dotenv -e .test.env -- jest --watchAll --coverage --setupFiles dotenv/config -i",
     "migrate": "npx prisma migrate",
-    "migrate:test": "dotenv -e .test.env npx prisma migrate",
+    "migrate:test": "dotenv -e .test.env -- npx prisma migrate",
     "lint": "eslint ./",
     "lint:fix": "eslint ./ -- --fix"
   },
