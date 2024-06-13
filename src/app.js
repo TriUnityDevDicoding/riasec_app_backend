@@ -1,22 +1,11 @@
-const Hapi = require('@hapi/hapi')
 require('dotenv').config()
+const createServer = require('./infrastructures/http/create-server')
+const container = require('./infrastructures/container')
 
-const init = async () => {
-  const server = Hapi.server({
-    host: process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost',
-    port: process.env.PORT || 3000
-  })
-
-  server.route({
-    method: 'GET',
-    path: '/',
-    handler: (request, h) => {
-      return 'Hello world! again testing 123!'
-    }
-  })
-
+const start = async () => {
+  const server = await createServer(container)
   await server.start()
-  console.log('Server running on %s...', server.info.uri)
+  console.log(`server start at ${server.info.uri}...`)
 }
 
-init()
+start()

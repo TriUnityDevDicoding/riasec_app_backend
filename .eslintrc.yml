@@ -2,7 +2,9 @@ env:
   commonjs: true
   es2021: true
   node: true
+  jest: true
 extends: standard
 parserOptions:
   ecmaVersion: latest
-rules: {}
+rules:
+  space-before-function-paren: 'off'
