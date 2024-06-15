@@ -18,6 +18,11 @@ enum Gender {
   Female
 }
 
+enum Role {
+  Admin
+  User
+}
+
 enum Category {
   Realistic
   Investigative
@@ -34,6 +39,7 @@ model User {
   password      String
   date_of_birth DateTime
   gender        Gender
+  role          Role
   created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
   deleted_at    DateTime?
