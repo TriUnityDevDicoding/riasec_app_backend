@@ -6,7 +6,7 @@ const users = require('../../interfaces/http/api/users')
 const authentications = require('../../interfaces/http/api/authentications')
 const config = require('../../commons/config')
 
-const createServer = async container => {
+const createServer = async (container) => {
   const server = Hapi.server({
     host: config.app.host,
     port: config.app.port,
@@ -14,7 +14,7 @@ const createServer = async container => {
     routes: {
       cors: {
         origin: [config.app.corsOrigin],
-        headers: ['Accept', 'Content-Type']
+        headers: ['Accept', 'Content-Type', 'Authorization']
       }
     }
   })
