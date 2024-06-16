@@ -22,12 +22,16 @@ class UserRepositoryPostgres extends UserRepository {
     return { id: registeredUser.id }
   }
 
-  async getUserById (id) {
+  async getUserById (id, userIdCredentials) {
     const findUser = await this._prisma.user.findUnique({
       where: {
         id
       }
     })
+
+    if (id !== userIdCredentials) {
+      throw new AuthorizationError('this user does not belong to credential user.')
+    }
 
     if (!findUser) {
       throw new NotFoundError('user data not found.')
