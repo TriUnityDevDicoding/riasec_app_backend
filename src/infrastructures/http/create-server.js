@@ -4,6 +4,7 @@ const ClientError = require('../../commons/exceptions/client-error')
 const DomainErrorTranslator = require('../../commons/exceptions/domain-error-translator')
 const users = require('../../interfaces/http/api/users')
 const authentications = require('../../interfaces/http/api/authentications')
+const questions = require('../../interfaces/http/api/questions')
 const config = require('../../commons/config')
 
 const createServer = async (container) => {
@@ -48,6 +49,10 @@ const createServer = async (container) => {
     },
     {
       plugin: authentications,
+      options: { container }
+    },
+    {
+      plugin: questions,
       options: { container }
     }
   ])

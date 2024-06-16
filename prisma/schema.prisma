@@ -18,6 +18,15 @@ enum Gender {
   Female
 }
 
+enum Category {
+  Realistic
+  Investigative
+  Artistic
+  Social
+  Enterprising
+  Conventional
+}
+
 model User {
   id            String    @id @default(uuid())
   full_name     String
@@ -36,4 +45,12 @@ model Authentication {
   token String @id
 
   @@map("authentications")
+}
+
+model Question {
+  id       String   @id @default(uuid())
+  question String
+  category Category
+
+  @@map("questions")
 }
