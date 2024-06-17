@@ -25,11 +25,12 @@ class LoginUserUseCase {
     const fullname = user.fullname
     const dateOfBirth = await this._dateOfBirthParse.parseToString(user.dateOfBirth)
     const gender = user.gender
+    const role = user.role
 
     const accessToken = await this._authenticationTokenManager
-      .createAccessToken({ email, id, fullname, dateOfBirth, gender })
+      .createAccessToken({ email, id, fullname, dateOfBirth, gender, role })
     const refreshToken = await this._authenticationTokenManager
-      .createRefreshToken({ email, id, fullname, dateOfBirth, gender })
+      .createRefreshToken({ email, id, fullname, dateOfBirth, gender, role })
 
     const newAuthentication = new NewAuthentication({
       accessToken,
