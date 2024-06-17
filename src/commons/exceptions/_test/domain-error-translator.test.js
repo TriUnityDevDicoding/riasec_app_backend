@@ -21,6 +21,10 @@ describe('DomainErrorTranslator', () => {
       .toStrictEqual(new InvariantError('must send refresh token.'))
     expect(DomainErrorTranslator.translate(new Error('DELETE_AUTHENTICATION_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION')))
       .toStrictEqual(new InvariantError('refresh token must be string.'))
+    expect(DomainErrorTranslator.translate(new Error('NEW_QUESTION.NOT_CONTAIN_NEEDED_PROPERTY')))
+      .toStrictEqual(new InvariantError('cannot create a new question: the required properties are missing.'))
+    expect(DomainErrorTranslator.translate(new Error('NEW_QUESTION.NOT_MEET_DATA_TYPE_SPECIFICATION')))
+      .toStrictEqual(new InvariantError('cannot create a new question: the data type does not match.'))
   })
 
   it('should return original error when error message is not needed to translate', () => {
