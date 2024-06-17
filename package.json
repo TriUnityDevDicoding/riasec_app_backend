@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/app.js",
+  "prisma": {
+    "seed": "node src/infrastructures/database/seed/seed.js"
+  },
   "scripts": {
     "start": "node src/app.js",
     "start:dev": "NODE_ENV=development nodemon src/app.js",
