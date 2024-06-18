@@ -18,7 +18,8 @@ describe('A RegisterUser entities', () => {
       email: true,
       password: 'johndoe123',
       dateOfBirth: 'March 5th',
-      gender: 'Man'
+      gender: 'Man',
+      role: 'Root'
     }
 
     expect(() => new RegisterUser(payload)).toThrow(Error('REGISTER_USER.NOT_MEET_DATA_TYPE_SPECIFICATION'))
@@ -30,7 +31,8 @@ describe('A RegisterUser entities', () => {
       email: 'johndoe',
       password: 'johndoe123',
       dateOfBirth: '2000-03-05',
-      gender: 'Male'
+      gender: 'Male',
+      role: 'User'
     }
 
     expect(() => new RegisterUser(payload)).toThrow(Error('REGISTER_USER.INVALID_EMAIL_FORMAT'))
@@ -42,15 +44,17 @@ describe('A RegisterUser entities', () => {
       email: 'johndoe@email.com',
       password: 'johndoe123',
       dateOfBirth: '2000-03-05',
-      gender: 'Male'
+      gender: 'Male',
+      role: 'User'
     }
 
-    const { fullname, email, password, dateOfBirth, gender } = new RegisterUser(payload)
+    const { fullname, email, password, dateOfBirth, gender, role } = new RegisterUser(payload)
 
     expect(fullname).toEqual(payload.fullname)
     expect(email).toEqual(payload.email)
     expect(password).toEqual(payload.password)
     expect(dateOfBirth).toEqual(payload.dateOfBirth)
     expect(gender).toEqual(payload.gender)
+    expect(role).toEqual(payload.role)
   })
 })

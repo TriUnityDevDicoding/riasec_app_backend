@@ -1,23 +1,25 @@
 class RegisteredUser {
   constructor (payload) {
     this._verifyPayload(payload)
-    const { id, fullname, email, dateOfBirth, gender } = payload
+    const { id, fullname, email, dateOfBirth, gender, role } = payload
 
     this.id = id
     this.fullname = fullname
     this.email = email
     this.dateOfBirth = dateOfBirth
     this.gender = gender
+    this.role = role
   }
 
-  _verifyPayload ({ id, fullname, email, dateOfBirth, gender }) {
+  _verifyPayload ({ id, fullname, email, dateOfBirth, gender, role }) {
     const checkGender = !!(gender !== 'Male' && gender !== 'Female')
+    const checkRole = !!(role !== 'Admin' && role !== 'User')
 
-    if (!id || !fullname || !email || !dateOfBirth || !gender) {
+    if (!id || !fullname || !email || !dateOfBirth || !gender || !role) {
       throw new Error('REGISTERED_USER.NOT_CONTAIN_NEEDED_PROPERTY')
     }
 
-    if (typeof id !== 'string' || typeof fullname !== 'string' || typeof email !== 'string' || typeof dateOfBirth !== 'string' || checkGender) {
+    if (typeof id !== 'string' || typeof fullname !== 'string' || typeof email !== 'string' || typeof dateOfBirth !== 'string' || checkGender || checkRole) {
       throw new Error('REGISTERED_USER.NOT_MEET_DATA_TYPE_SPECIFICATION')
     }
   }

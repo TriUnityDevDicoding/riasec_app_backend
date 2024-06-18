@@ -18,6 +18,11 @@ enum Gender {
   Female
 }
 
+enum Role {
+  Admin
+  User
+}
+
 enum Category {
   Realistic
   Investigative
@@ -28,15 +33,19 @@ enum Category {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  full_name     String
-  email         String    @unique
-  password      String
-  date_of_birth DateTime
-  gender        Gender
-  created_at    DateTime  @default(now())
-  updated_at    DateTime  @updatedAt
-  deleted_at    DateTime?
+  id               String            @id @default(uuid())
+  full_name        String
+  email            String            @unique
+  password         String
+  date_of_birth    DateTime
+  gender           Gender
+  role             Role
+  created_at       DateTime          @default(now())
+  updated_at       DateTime          @updatedAt
+  deleted_at       DateTime?
+  questions_answer QuestionsAnswer[]
+  session          Session[]
+  quiz_result      QuizResult[]
 
   @@map("users")
 }
@@ -48,9 +57,55 @@ model Authentication {
 }
 
 model Question {
-  id       String   @id @default(uuid())
-  question String
-  category Category
+  id               String            @id @default(uuid())
+  question         String
+  category         Category
+  questions_answer QuestionsAnswer[]
 
   @@map("questions")
+}
+
+model QuestionsAnswer {
+  id                   String   @id @default(uuid())
+  question_id_relation Question @relation(fields: [question_id], references: [id])
+  question_id          String
+  owner_relation       User     @relation(fields: [owner], references: [id])
+  owner                String
+  score                String
+  session_id_relation  Session  @relation(fields: [session_id], references: [id])
+  session_id           String
+  category_name        String
+
+  @@map("questions_answers")
+}
+
+model Session {
+  id                      String            @id @default(uuid())
+  quiz_result_id_relation QuizResult?       @relation("SessionQuizResult", fields: [quiz_result_id], references: [id])
+  quiz_result_id          String?
+  owner_relation          User              @relation(fields: [owner], references: [id])
+  owner                   String
+  question_answer         QuestionsAnswer[]
+  quiz_result             QuizResult[]      @relation("QuizResultSession")
+
+  @@map("sessions")
+}
+
+model QuizResult {
+  id                  String    @id @default(uuid())
+  owner_relation      User      @relation(fields: [owner], references: [id])
+  owner               String
+  realistic_score     String
+  investigative_score String
+  artistic_score      String
+  social_score        String
+  enterprising_score  String
+  conventional_score  String
+  session_id_relation Session   @relation("QuizResultSession", fields: [session_id], references: [id])
+  session_id          String
+  groq_response       String?
+  created_at          DateTime  @default(now())
+  session             Session[] @relation("SessionQuizResult")
+
+  @@map("quiz_results")
 }

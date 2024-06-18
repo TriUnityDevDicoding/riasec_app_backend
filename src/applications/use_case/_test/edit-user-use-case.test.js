@@ -21,7 +21,8 @@ describe('EditUserUseCase', () => {
       fullname: useCasePayload.fullname,
       email: 'johndoe@email.com',
       dateOfBirth: useCasePayload.dateOfBirth,
-      gender: useCasePayload.gender
+      gender: useCasePayload.gender,
+      role: 'User'
     })
 
     const mockUserRepository = new UserRepository()
@@ -34,7 +35,8 @@ describe('EditUserUseCase', () => {
         fullname: useCasePayload.fullname,
         email: 'johndoe@email.com',
         dateOfBirth: dateOfBirthObj,
-        gender: useCasePayload.gender
+        gender: useCasePayload.gender,
+        role: 'User'
       }))
     mockDateOfBirthParse.parseToString = jest.fn(() => Promise.resolve('2000-03-05'))
 

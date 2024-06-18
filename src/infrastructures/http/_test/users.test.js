@@ -13,7 +13,8 @@ describe('/users endpoint', () => {
     email: 'michael@email.com',
     password: 'michaeldoe123',
     dateOfBirth: '2000-09-15',
-    gender: 'Male'
+    gender: 'Male',
+    role: 'User'
   }
 
   beforeEach(async () => {
@@ -52,7 +53,8 @@ describe('/users endpoint', () => {
         email: 'johndoe@email.com',
         password: 'johndoe123',
         dateOfBirth: '2000-03-05',
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }
 
       const response = await server.inject({
@@ -72,7 +74,8 @@ describe('/users endpoint', () => {
         fullname: 'John Doe',
         email: 'johndoe@email.com',
         dateOfBirth: 'johndoe123',
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }
 
       const response = await server.inject({
@@ -93,7 +96,8 @@ describe('/users endpoint', () => {
         email: true,
         password: 'johndoe123',
         dateOfBirth: 'March 5th',
-        gender: 'Man'
+        gender: 'Man',
+        role: 'Root'
       }
 
       const response = await server.inject({
@@ -114,7 +118,8 @@ describe('/users endpoint', () => {
         email: 'johndoe',
         password: 'johndoe123',
         dateOfBirth: 'johndoe123',
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }
 
       const response = await server.inject({
@@ -136,7 +141,8 @@ describe('/users endpoint', () => {
         email: 'johndoe@email.com',
         password: 'johndoe123',
         dateOfBirth: 'johndoe123',
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }
 
       const response = await server.inject({

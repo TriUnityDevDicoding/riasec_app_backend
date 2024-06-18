@@ -18,7 +18,8 @@ describe('A RegisteredUser entitites', () => {
       fullname: 'John Doe',
       email: 'johndoe@email.com',
       dateOfBirth: '2000-03-05',
-      gender: 'Man'
+      gender: 'Man',
+      role: 'Root'
     }
 
     expect(() => new RegisteredUser(payload)).toThrow(Error('REGISTERED_USER.NOT_MEET_DATA_TYPE_SPECIFICATION'))
@@ -30,7 +31,8 @@ describe('A RegisteredUser entitites', () => {
       fullname: 'John Doe',
       email: 'johndoe@email.com',
       dateOfBirth: '2000-03-05',
-      gender: 'Male'
+      gender: 'Male',
+      role: 'User'
     }
 
     const registeredUser = new RegisteredUser(payload)
@@ -40,5 +42,6 @@ describe('A RegisteredUser entitites', () => {
     expect(registeredUser.email).toEqual(payload.email)
     expect(registeredUser.dateOfBirth).toEqual(payload.dateOfBirth)
     expect(registeredUser.gender).toEqual(payload.gender)
+    expect(registeredUser.role).toEqual(payload.role)
   })
 })

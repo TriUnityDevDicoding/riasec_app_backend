@@ -22,7 +22,8 @@ describe('UserRepositoryPostgres', () => {
         email: 'johndoe@email.com',
         password: 'johndoe123',
         dateOfBirth: new Date('2000-03-05'),
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }
       const fakeIdGenerator = () => '123'
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, fakeIdGenerator)
@@ -58,7 +59,8 @@ describe('UserRepositoryPostgres', () => {
         email: 'johndoe@email.com',
         password: 'johndoe123',
         dateOfBirth: new Date('2000-03-05'),
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }
       await UsersTableTestHelper.addUser({ ...userPayloadInDatabase })
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
@@ -70,11 +72,13 @@ describe('UserRepositoryPostgres', () => {
       expect(detailUser.email).toStrictEqual(userPayloadInDatabase.email)
       expect(detailUser.dateOfBirth).toStrictEqual(userPayloadInDatabase.dateOfBirth)
       expect(detailUser.gender).toStrictEqual(userPayloadInDatabase.gender)
+      expect(detailUser.role).toStrictEqual(userPayloadInDatabase.role)
       expect(detailUser).toHaveProperty('id')
       expect(detailUser).toHaveProperty('fullname')
       expect(detailUser).toHaveProperty('email')
       expect(detailUser).toHaveProperty('dateOfBirth')
       expect(detailUser).toHaveProperty('gender')
+      expect(detailUser).toHaveProperty('role')
     })
   })
 
@@ -92,7 +96,8 @@ describe('UserRepositoryPostgres', () => {
         email: 'johndoe@email.com',
         password: 'johndoe123',
         dateOfBirth: new Date('2000-03-05'),
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }
       await UsersTableTestHelper.addUser({ ...userPayloadInDatabase })
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
@@ -104,11 +109,13 @@ describe('UserRepositoryPostgres', () => {
       expect(detailUser.email).toStrictEqual(userPayloadInDatabase.email)
       expect(detailUser.dateOfBirth).toStrictEqual(userPayloadInDatabase.dateOfBirth)
       expect(detailUser.gender).toStrictEqual(userPayloadInDatabase.gender)
+      expect(detailUser.role).toStrictEqual(userPayloadInDatabase.role)
       expect(detailUser).toHaveProperty('id')
       expect(detailUser).toHaveProperty('fullname')
       expect(detailUser).toHaveProperty('email')
       expect(detailUser).toHaveProperty('dateOfBirth')
       expect(detailUser).toHaveProperty('gender')
+      expect(detailUser).toHaveProperty('role')
     })
   })
 
@@ -172,7 +179,8 @@ describe('UserRepositoryPostgres', () => {
         email: 'johndoe@email.com',
         password: 'johndoe123',
         dateOfBirth: new Date('2000-03-05'),
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }
       const updateUserPayloadInDatabase = {
         fullname: 'Mia Doe',
@@ -191,7 +199,8 @@ describe('UserRepositoryPostgres', () => {
         email: 'johndoe@email.com',
         password: userPayloadInDatabase.password,
         dateOfBirth: updateUserPayloadInDatabase.dateOfBirth,
-        gender: updateUserPayloadInDatabase.gender
+        gender: updateUserPayloadInDatabase.gender,
+        role: userPayloadInDatabase.role
       })
     })
   })
