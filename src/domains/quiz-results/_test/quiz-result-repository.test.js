@@ -7,5 +7,6 @@ describe('QuizResultRepository interface', () => {
 
     // Action & Assert
     await expect(questionRepository.addQuizResult('', {}, '')).rejects.toThrow(Error('QUIZ_RESULT_REPOSITORY.METHOD_NOT_IMPLEMENTED'))
+    await expect(questionRepository.getQuizResults('')).rejects.toThrow(Error('QUIZ_RESULT_REPOSITORY.METHOD_NOT_IMPLEMENTED'))
   })
 })

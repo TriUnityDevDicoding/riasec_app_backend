@@ -37,6 +37,7 @@ const RefreshAuthenticationUseCase = require('../applications/use_case/refresh-a
 const AddQuestionUseCase = require('../applications/use_case/add-question-use-case')
 const GetQuestionsUseCase = require('../applications/use_case/get-questions-use-case')
 const AddQuestionsAnswerUseCase = require('../applications/use_case/add-questions-answer-use-case')
+const GetQuizResultUseCase = require('../applications/use_case/get-quiz-result-use-case')
 
 const container = createContainer()
 
@@ -287,6 +288,19 @@ container.register([
           name: 'sessionRepository',
           internal: SessionRepository.name
         },
+        {
+          name: 'quizResultRepository',
+          internal: QuizResultRepository.name
+        }
+      ]
+    }
+  },
+  {
+    key: GetQuizResultUseCase.name,
+    Class: GetQuizResultUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
         {
           name: 'quizResultRepository',
           internal: QuizResultRepository.name
