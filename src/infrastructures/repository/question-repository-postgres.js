@@ -21,13 +21,11 @@ class QuestionRepositoryPostgres extends QuestionRepository {
   }
 
   async getQuestionsByCategory(category) {
-    const questions = await this._prisma.question.findMany({
+    return await this._prisma.question.findMany({
       where: {
         category
       }
     })
-
-    return questions
   }
 
   async verifyQuestionExist(question) {

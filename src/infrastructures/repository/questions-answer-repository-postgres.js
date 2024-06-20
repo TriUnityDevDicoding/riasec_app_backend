@@ -43,7 +43,7 @@ class QuestionsAnswerRepositoryPostgres extends QuestionsAnswerRepository {
   }
 
   async countScores(sessionId) {
-    const scores = await this._prisma.questionsAnswer.groupBy({
+    return await this._prisma.questionsAnswer.groupBy({
       by: ['category_name'],
       where: {
         session_id: sessionId
@@ -52,8 +52,6 @@ class QuestionsAnswerRepositoryPostgres extends QuestionsAnswerRepository {
         score: true
       }
     })
-
-    return scores
   }
 }
 

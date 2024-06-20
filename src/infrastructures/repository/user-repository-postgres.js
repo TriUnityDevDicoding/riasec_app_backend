@@ -92,40 +92,6 @@ class UserRepositoryPostgres extends UserRepository {
       throw new InvariantError('an unexpected error occured.')
     }
   }
-
-  async getPasswordByEmail(email) {
-    const result = await this._prisma.user.findUnique({
-      where: {
-        email
-      },
-      select: {
-        password: true
-      }
-    })
-
-    if (!result) {
-      throw new InvariantError('email not found.')
-    }
-
-    return result.password
-  }
-
-  async getIdByEmail(email) {
-    const result = await this._prisma.user.findUnique({
-      where: {
-        email
-      },
-      select: {
-        id: true
-      }
-    })
-
-    if (!result) {
-      throw new InvariantError('user not found.')
-    }
-
-    return result.id
-  }
 }
 
 module.exports = UserRepositoryPostgres
