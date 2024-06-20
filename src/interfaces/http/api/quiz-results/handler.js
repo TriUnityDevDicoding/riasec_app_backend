@@ -9,13 +9,13 @@ class QuizResultsHandler {
 
   async getQuizResultsHandler (request, h) {
     const getQuizResultUseCase = this._container.getInstance(GetQuizResultUseCase.name)
-    const quizResults = await getQuizResultUseCase.execute(request.auth.credentials.id)
+    const quizResultsData = await getQuizResultUseCase.execute(request.auth.credentials.id)
 
     const response = h.response({
       status: 'success',
       message: 'quiz results retrieved successfully.',
       data: {
-        quizResults: quizResults
+        quizResults: quizResultsData
       }
     })
     response.code(201)

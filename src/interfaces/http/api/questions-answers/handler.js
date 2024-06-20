@@ -9,13 +9,13 @@ class QuestionsAnswersHandler {
 
   async postQuestionsAnswersHandler (request, h) {
     const addQuestionsAnswerUseCase = this._container.getInstance(AddQuestionsAnswerUseCase.name)
-    const addedQuestionsAnswer = await addQuestionsAnswerUseCase.execute(request.payload, request.auth.credentials.id)
+    const addedQuestionsAnswers = await addQuestionsAnswerUseCase.execute(request.payload, request.auth.credentials.id)
 
     const response = h.response({
       status: 'success',
-      message: 'questions answer added successfully.',
+      message: 'questions answers added successfully.',
       data: {
-        questionsAnswer: addedQuestionsAnswer
+        questionsAnswers: addedQuestionsAnswers
       }
     })
     response.code(201)
