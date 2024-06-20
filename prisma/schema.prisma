@@ -71,7 +71,7 @@ model QuestionsAnswer {
   question_id          String
   owner_relation       User     @relation(fields: [owner], references: [id])
   owner                String
-  score                BigInt
+  score                Int
   session_id_relation  Session  @relation(fields: [session_id], references: [id])
   session_id           String
   category_name        String
@@ -95,12 +95,12 @@ model QuizResult {
   id                  String    @id @default(uuid())
   owner_relation      User      @relation(fields: [owner], references: [id])
   owner               String
-  realistic_score     BigInt
-  investigative_score BigInt
-  artistic_score      BigInt
-  social_score        BigInt
-  enterprising_score  BigInt
-  conventional_score  BigInt
+  realistic_score     Int
+  investigative_score Int
+  artistic_score      Int
+  social_score        Int
+  enterprising_score  Int
+  conventional_score  Int
   session_id_relation Session   @relation("QuizResultSession", fields: [session_id], references: [id])
   session_id          String
   groq_response       String?
