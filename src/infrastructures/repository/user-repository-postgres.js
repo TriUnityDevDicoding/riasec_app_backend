@@ -1,6 +1,7 @@
 const AuthorizationError = require('../../commons/exceptions/authorization-error')
 const InvariantError = require('../../commons/exceptions/invariant-error')
 const NotFoundError = require('../../commons/exceptions/not-found-error')
+const RegisteredUser = require('../../domains/users/entities/registered-user')
 const UserRepository = require('../../domains/users/user-repository')
 const { mapDBToRegisteredUser } = require('../utils')
 
@@ -19,7 +20,7 @@ class UserRepositoryPostgres extends UserRepository {
       data: { id, full_name: fullname, email, password, date_of_birth: dateOfBirth, gender, role }
     })
 
-    return { id: registeredUser.id }
+    return new RegisteredUser({ id: registeredUser.id })
   }
 
   async getUserById (id, userIdCredentials) {
