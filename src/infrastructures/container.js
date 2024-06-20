@@ -14,6 +14,12 @@ const AuthenticationRepository = require('../domains/authentications/authenticat
 const AuthenticationRepositoryPostgres = require('./repository/authentication-repository-postgres')
 const QuestionRepository = require('../domains/questions/question-repository')
 const QuestionRepositoryPostgres = require('./repository/question-repository-postgres')
+const QuestionsAnswerRepository = require('../domains/questions-answers/questions-answer-repository')
+const QuestionsAnswerRepositoryPostgres = require('./repository/questions-answer-repository-postgres')
+const SessionRepository = require('../domains/sessions/session-repository')
+const SessionRepositoryPostgres = require('./repository/session-repository-postgres')
+const QuizResultRepository = require('../domains/quiz-results/quiz-result-repository')
+const QuizResultRepositoryPostgres = require('./repository/quiz-result-repository-postgres')
 const PasswordHash = require('../applications/security/password-hash')
 const BcryptPasswordHash = require('./security/bcrypt-password-hash')
 const DateOfBirthParse = require('../applications/security/date-of-birth-parse')
@@ -30,6 +36,7 @@ const LogoutUserUseCase = require('../applications/use_case/logout-user-use-case
 const RefreshAuthenticationUseCase = require('../applications/use_case/refresh-authentication-use-case')
 const AddQuestionUseCase = require('../applications/use_case/add-question-use-case')
 const GetQuestionsUseCase = require('../applications/use_case/get-questions-use-case')
+const AddQuestionsAnswerUseCase = require('../applications/use_case/add-questions-answer-use-case')
 
 const container = createContainer()
 
@@ -58,6 +65,36 @@ container.register([
   {
     key: QuestionRepository.name,
     Class: QuestionRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        { concrete: prisma },
+        { concrete: nanoid }
+      ]
+    }
+  },
+  {
+    key: QuestionsAnswerRepository.name,
+    Class: QuestionsAnswerRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        { concrete: prisma },
+        { concrete: nanoid }
+      ]
+    }
+  },
+  {
+    key: SessionRepository.name,
+    Class: SessionRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        { concrete: prisma },
+        { concrete: nanoid }
+      ]
+    }
+  },
+  {
+    key: QuizResultRepository.name,
+    Class: QuizResultRepositoryPostgres,
     parameter: {
       dependencies: [
         { concrete: prisma },
@@ -231,7 +268,32 @@ container.register([
         }
       ]
     }
-  }
+  },
+  {
+    key: AddQuestionsAnswerUseCase.name,
+    Class: AddQuestionsAnswerUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'questionsAnswerRepository',
+          internal: QuestionsAnswerRepository.name
+        },
+        {
+          name: 'questionRepository',
+          internal: QuestionRepository.name
+        },
+        {
+          name: 'sessionRepository',
+          internal: SessionRepository.name
+        },
+        {
+          name: 'quizResultRepository',
+          internal: QuizResultRepository.name
+        }
+      ]
+    }
+  },
 ])
 
 module.exports = container

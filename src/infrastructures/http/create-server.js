@@ -5,6 +5,7 @@ const DomainErrorTranslator = require('../../commons/exceptions/domain-error-tra
 const users = require('../../interfaces/http/api/users')
 const authentications = require('../../interfaces/http/api/authentications')
 const questions = require('../../interfaces/http/api/questions')
+const questionsAnswers = require('../../interfaces/http/api/questions-answers')
 const config = require('../../commons/config')
 
 const createServer = async (container) => {
@@ -53,6 +54,10 @@ const createServer = async (container) => {
     },
     {
       plugin: questions,
+      options: { container }
+    },
+    {
+      plugin: questionsAnswers,
       options: { container }
     }
   ])

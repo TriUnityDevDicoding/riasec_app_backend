@@ -1,3 +1,4 @@
+const NotFoundError = require('../../commons/exceptions/not-found-error')
 const AddedQuestion = require('../../domains/questions/entities/added-question')
 const QuestionRepository = require('../../domains/questions/question-repository')
 
@@ -27,6 +28,22 @@ class QuestionRepositoryPostgres extends QuestionRepository {
     })
 
     return questions
+  }
+
+  async verifyQuestionExist(question) {
+    for (const item of question) {
+      const { questionId } = item
+
+      const question = await this._prisma.question.findUnique({
+        where: {
+          id: questionId
+        }
+      })
+
+      if (!question) {
+        throw new NotFoundError(`question id '${questionId}' not found.`)
+      }
+    }
   }
 }
 
