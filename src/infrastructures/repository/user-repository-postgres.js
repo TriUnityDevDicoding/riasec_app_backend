@@ -12,11 +12,11 @@ class UserRepositoryPostgres extends UserRepository {
   }
 
   async addUser (registerUser) {
-    const { fullname, email, password, dateOfBirth, gender } = registerUser
+    const { fullname, email, password, dateOfBirth, gender, role } = registerUser
     const id = `user-${this._idGenerator()}`
 
     const registeredUser = await this._prisma.user.create({
-      data: { id, full_name: fullname, email, password, date_of_birth: dateOfBirth, gender }
+      data: { id, full_name: fullname, email, password, date_of_birth: dateOfBirth, gender, role }
     })
 
     return { id: registeredUser.id }
