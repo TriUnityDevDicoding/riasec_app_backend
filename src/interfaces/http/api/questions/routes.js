@@ -2,7 +2,10 @@ const routes = handler => ([
   {
     method: 'POST',
     path: '/questions',
-    handler: handler.postQuestionHandler
+    handler: handler.postQuestionHandler,
+    options: {
+      auth: 'riasec_app_backend'
+    }
   },
   {
     method: 'GET',

@@ -20,6 +20,8 @@ const DateOfBirthParse = require('../applications/security/date-of-birth-parse')
 const ParsingDateOfBirth = require('./security/parsing-date-of-birth')
 const AuthenticationTokenManager = require('../applications/security/authentication-token-manager')
 const JwtTokenManager = require('./security/jwt-token-manager')
+const AuthorizationCheck = require('../applications/security/authorization-check')
+const RoleCheck = require('../infrastructures/security/role-check')
 
 // use case
 const AddUserUseCase = require('../applications/use_case/add-user-use-case')
@@ -88,6 +90,10 @@ container.register([
         }
       ]
     }
+  },
+  {
+    key: AuthorizationCheck.name,
+    Class: RoleCheck
   }
 ])
 
@@ -215,6 +221,10 @@ container.register([
         {
           name: 'questionRepository',
           internal: QuestionRepository.name
+        },
+        {
+          name: 'authorizationCheck',
+          internal: AuthorizationCheck.name
         }
       ]
     }

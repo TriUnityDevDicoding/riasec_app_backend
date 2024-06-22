@@ -11,7 +11,7 @@ class QuestionsHandler {
 
   async postQuestionHandler (request, h) {
     const addQuestionUseCase = this._container.getInstance(AddQuestionUseCase.name)
-    const addedQuestion = await addQuestionUseCase.execute(request.payload)
+    const addedQuestion = await addQuestionUseCase.execute(request.payload, request.auth.credentials.role)
 
     const response = h.response({
       status: 'success',
