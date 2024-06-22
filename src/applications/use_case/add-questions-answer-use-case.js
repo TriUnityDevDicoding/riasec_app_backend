@@ -7,10 +7,15 @@ class AddQuestionsAnswerUseCase {
   }
 
   async execute(useCasePayload, credentialId) {
-    await this._questionRepository.verifyQuestionExist(useCasePayload)
+    // return the array of questions if the questions is exist, containing id and categoryName
+    const questions = await this._questionRepository.verifyQuestionExist(useCasePayload)
     const addedSession = await this._sessionRepository.addSession(credentialId)
-    const addedQuestionsAnswers = await this._questionsAnswerRepository.addQuestionsAnswers(credentialId, useCasePayload, addedSession.id)
+    // combine the arrays of questions (id, categoryName) with the arrays of useCasePayload (questionId, score)
+    // to avoid having categoryName in payload
+    const questionsAnswers = this._combineArrays(useCasePayload, questions)
+    const addedQuestionsAnswers = await this._questionsAnswerRepository.addQuestionsAnswers(credentialId, questionsAnswers, addedSession.id)
     const countedScores = await this._questionsAnswerRepository.countScores(addedSession.id)
+    // map the array of counted scores into a callable function to retrieve the score easily for the addQuizResult
     const mappedCategory = this._createCategoryMap(countedScores)
     const addedQuizResult = await this._quizResultRepository.addQuizResult(credentialId, mappedCategory, addedSession.id)
     await this._sessionRepository.putQuizResultId(addedSession.id, addedQuizResult.id)
@@ -18,10 +23,28 @@ class AddQuestionsAnswerUseCase {
     return addedQuestionsAnswers
   }
 
+  _combineArrays(array1, array2) {
+    return array1.map((item1) => {
+      const matchedItem = array2.find((item2) => item1.questionId === item2.id)
+      if (matchedItem) {
+        return {
+          questionId: item1.questionId,
+          score: item1.score,
+          categoryName: matchedItem.categoryName
+        }
+      } else {
+        return item1
+      }
+    })
+  }
+
   _createCategoryMap(data) {
     const categoryMap = {}
-    data.forEach(item => {
-      const { _sum: { score }, category_name } = item
+    data.forEach((item) => {
+      const {
+        _sum: { score },
+        category_name
+      } = item
       categoryMap[category_name] = score
     })
     return categoryMap
