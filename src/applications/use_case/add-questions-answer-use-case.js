@@ -1,3 +1,5 @@
+const NewQuestionsAnswer = require('../../domains/questions-answers/entities/new-questions-answer')
+
 class AddQuestionsAnswerUseCase {
   constructor({ questionsAnswerRepository, questionRepository, sessionRepository, quizResultRepository }) {
     this._questionsAnswerRepository = questionsAnswerRepository
@@ -7,9 +9,10 @@ class AddQuestionsAnswerUseCase {
   }
 
   async execute(useCasePayload, credentialId) {
-    await this._questionRepository.verifyQuestionExist(useCasePayload)
+    const questionsAnswers = useCasePayload.map(item => new NewQuestionsAnswer(item))
+    await this._questionRepository.verifyQuestionExist(questionsAnswers)
     const addedSession = await this._sessionRepository.addSession(credentialId)
-    const addedQuestionsAnswers = await this._questionsAnswerRepository.addQuestionsAnswers(credentialId, useCasePayload, addedSession.id)
+    const addedQuestionsAnswers = await this._questionsAnswerRepository.addQuestionsAnswers(credentialId, questionsAnswers, addedSession.id)
     const countedScores = await this._questionsAnswerRepository.countScores(addedSession.id)
     const mappedCategory = this._createCategoryMap(countedScores)
     const addedQuizResult = await this._quizResultRepository.addQuizResult(credentialId, mappedCategory, addedSession.id)
