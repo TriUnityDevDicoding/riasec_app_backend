@@ -38,6 +38,7 @@ const AddQuestionUseCase = require('../applications/use_case/add-question-use-ca
 const GetQuestionsUseCase = require('../applications/use_case/get-questions-use-case')
 const AddQuestionsAnswerUseCase = require('../applications/use_case/add-questions-answer-use-case')
 const GetQuizResultUseCase = require('../applications/use_case/get-quiz-result-use-case')
+const EditUserPasswordUseCase = require('../applications/use_case/edit-user-password-use-case')
 
 const container = createContainer()
 
@@ -308,6 +309,23 @@ container.register([
       ]
     }
   },
+  {
+    key: EditUserPasswordUseCase.name,
+    Class: EditUserPasswordUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'userRepository',
+          internal: UserRepository.name
+        },
+        {
+          name: 'passwordHash',
+          internal: PasswordHash.name
+        }
+      ]
+    }
+  }
 ])
 
 module.exports = container

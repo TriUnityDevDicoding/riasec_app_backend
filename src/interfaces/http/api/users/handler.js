@@ -1,6 +1,7 @@
 const AddUserUseCase = require('../../../../applications/use_case/add-user-use-case')
 const DetailUserUseCase = require('../../../../applications/use_case/detail-user-use-case')
 const EditUserUseCase = require('../../../../applications/use_case/edit-user-use-case')
+const EditUserPasswordUseCase = require('../../../../applications/use_case/edit-user-password-use-case')
 
 class UsersHandler {
   constructor (container) {
@@ -9,6 +10,7 @@ class UsersHandler {
     this.postUserHandler = this.postUserHandler.bind(this)
     this.getUserByIdHandler = this.getUserByIdHandler.bind(this)
     this.putUserByIdHandler = this.putUserByIdHandler.bind(this)
+    this.putUserPasswordByIdHandler = this.putUserPasswordByIdHandler.bind(this)
   }
 
   async postUserHandler (request, h) {
@@ -56,6 +58,21 @@ class UsersHandler {
       data: {
         user: editedUser
       }
+    })
+    response.code(200)
+    return response
+  }
+
+  async putUserPasswordByIdHandler (request, h) {
+    const userId = request.auth.credentials.id
+    const { payload } = request
+    const params = { id: request.params.userId }
+    const editUserPasswordUseCase = this._container.getInstance(EditUserPasswordUseCase.name)
+    await editUserPasswordUseCase.execute(params, userId, payload)
+
+    const response = h.response({
+      status: 'success',
+      message: 'user password updated successfully.',
     })
     response.code(200)
     return response
