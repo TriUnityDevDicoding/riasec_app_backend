@@ -1,5 +1,5 @@
 const QuestionsAnswerRepository = require('../../domains/questions-answers/questions-answer-repository')
-
+const AddedQuestionsAnswer = require('../../domains/questions-answers/entities/added-questions-answer')
 class QuestionsAnswerRepositoryPostgres extends QuestionsAnswerRepository {
   constructor(prisma, idGenerator) {
     super()
@@ -39,7 +39,7 @@ class QuestionsAnswerRepositoryPostgres extends QuestionsAnswerRepository {
       addedAnswers.push({ id: addedAnswer.id })
     }
 
-    return addedAnswers
+    return addedAnswers.map(item => new AddedQuestionsAnswer(item))
   }
 
   async countScores(sessionId) {

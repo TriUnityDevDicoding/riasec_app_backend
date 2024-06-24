@@ -8,8 +8,12 @@ class GetQuestionsUseCase {
     let questions = []
 
     for (const category of categories) {
+      // get questions for each category
       const categoryQuestions = await this._questionRepository.getQuestionsByCategory(category)
+      // randomize the questions
       const shuffledQuestions = this._shuffleArray(categoryQuestions)
+      // append the first two randomly shuffled questions from the current category
+      // to the `questions` array, thus making each category only have two questions
       questions = questions.concat(shuffledQuestions.slice(0, 2))
     }
 

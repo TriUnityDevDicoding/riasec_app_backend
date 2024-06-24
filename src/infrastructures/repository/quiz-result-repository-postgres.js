@@ -41,6 +41,9 @@ class QuizResultRepositoryPostgres extends QuizResultRepository {
     return this._prisma.quizResult.findMany({
       where: {
         owner: credentialId
+      },
+      orderBy: {
+        created_at: 'desc'
       }
     })
   }

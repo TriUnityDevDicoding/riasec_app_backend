@@ -1,3 +1,5 @@
+const NewQuestionsAnswer = require('../../domains/questions-answers/entities/new-questions-answer')
+
 class AddQuestionsAnswerUseCase {
   constructor({
     questionsAnswerRepository,
@@ -14,14 +16,20 @@ class AddQuestionsAnswerUseCase {
   }
 
   async execute(useCasePayload, credentialId) {
-    await this._questionRepository.verifyQuestionExist(useCasePayload)
+    const questionsAnswers = useCasePayload.map(item => new NewQuestionsAnswer(item))
+    // return the array of questions if the questions is exist, containing id and categoryName
+    const questions = await this._questionRepository.verifyQuestionExist(questionsAnswers)
     const addedSession = await this._sessionRepository.addSession(credentialId)
+    // combine the arrays of questions (id, categoryName) with the arrays of questionsAnswer (questionId, score)
+    // to avoid having categoryName in payload
+    const combinedQuestionsAnswers = this._combineArrays(questionsAnswers, questions)
     const addedQuestionsAnswers = await this._questionsAnswerRepository.addQuestionsAnswers(
       credentialId,
       useCasePayload,
       addedSession.id
     )
     const countedScores = await this._questionsAnswerRepository.countScores(addedSession.id)
+    // map the array of counted scores into a callable function to retrieve the score easily for the addQuizResult
     const mappedCategory = this._createCategoryMap(countedScores)
 
     const realisticPercentage = this._percentageScore(mappedCategory.Realistic, mappedCategory)
@@ -53,6 +61,21 @@ class AddQuestionsAnswerUseCase {
     await this._sessionRepository.putQuizResultId(addedSession.id, addedQuizResult.id)
 
     return addedQuestionsAnswers
+  }
+
+  _combineArrays(array1, array2) {
+    return array1.map((item1) => {
+      const matchedItem = array2.find((item2) => item1.questionId === item2.id)
+      if (matchedItem) {
+        return {
+          questionId: item1.questionId,
+          score: item1.score,
+          categoryName: matchedItem.categoryName
+        }
+      } else {
+        return item1
+      }
+    })
   }
 
   _createCategoryMap(data) {
