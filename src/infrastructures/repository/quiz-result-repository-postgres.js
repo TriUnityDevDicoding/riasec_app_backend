@@ -7,7 +7,7 @@ class QuizResultRepositoryPostgres extends QuizResultRepository {
     this._idGenerator = idGenerator
   }
 
-  async addQuizResult(credentialId, newQuizResult, sessionId) {
+  async addQuizResult(credentialId, newQuizResult, groqResponse, sessionId) {
     const { Realistic, Investigative, Artistic, Social, Enterprising, Conventional } = newQuizResult
     const id = `quiz-result-${this._idGenerator()}`
 
@@ -29,7 +29,8 @@ class QuizResultRepositoryPostgres extends QuizResultRepository {
           connect: {
             id: sessionId
           }
-        }
+        },
+        groq_response: groqResponse
       }
     })
 
