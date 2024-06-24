@@ -29,19 +29,29 @@ class QuestionRepositoryPostgres extends QuestionRepository {
   }
 
   async verifyQuestionExist(question) {
+    const questions = []
+
     for (const item of question) {
       const { questionId } = item
 
       const question = await this._prisma.question.findUnique({
         where: {
           id: questionId
+        },
+        select: {
+          id: true,
+          category: true
         }
       })
 
       if (!question) {
         throw new NotFoundError(`question id '${questionId}' not found.`)
       }
+
+      questions.push({ id: question.id, categoryName: question.category })
     }
+
+    return questions
   }
 }
 
