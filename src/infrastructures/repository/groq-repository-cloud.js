@@ -6,7 +6,14 @@ class GroqRepositoryCloud extends GroqRepository {
     this._groq = groq
   }
 
-  async beginPrompt(realisticScore, investigativeScore, artisticScore, socialScore, enterprisingScore, conventionalScore) {
+  async beginPrompt(
+    realisticScore,
+    investigativeScore,
+    artisticScore,
+    socialScore,
+    enterprisingScore,
+    conventionalScore
+  ) {
     const chatCompletion = await this._groq.chat.completions.create({
       messages: [
         {
@@ -15,10 +22,10 @@ class GroqRepositoryCloud extends GroqRepository {
         },
         {
           role: 'user',
-          content: `Saya telah melakukan tes RIASEC atau tes Holland, dan hasilnya menunjukkan bahwa saya cenderung memiliki kepribadian Realistic ${realisticScore} dari 10, Artistic ${artisticScore} dari 10, Conventional ${conventionalScore} dari 10, Investigative ${investigativeScore} dari 10, Social ${socialScore} dari 10, dan Enterprising ${enterprisingScore} dari 10. Bisakah Anda membantu saya memilih jurusan atau studi yang sesuai, serta jenjang karier yang cocok berdasarkan hasil kepribadian ini? Mohon tulis rekomendasi Anda dalam bahasa Indonesia dan hanya dalam bahasa Indonesia. Dan jelaskan juga kepada ciri karakteristik dari hasil kepribadian saya`
+          content: `Saya telah melakukan tes RIASEC atau tes Holland, dan hasilnya menunjukkan bahwa saya cenderung memiliki kepribadian Realistic ${realisticScore}%, Artistic ${artisticScore}%, Conventional ${conventionalScore}%, Investigative ${investigativeScore}%, Social ${socialScore}%, dan Enterprising ${enterprisingScore}%. Bisakah Anda membantu saya memilih jurusan atau studi yang sesuai? Mohon tulis rekomendasi Anda dalam bahasa Indonesia dan hanya dalam bahasa Indonesia. Dan tulis kesimpulan kepribadian milik saya berdasarkan hasil tes.`
         }
       ],
-      model: 'gemma-7b-it',
+      model: 'llama3-8b-8192',
       temperature: 0.5,
       max_tokens: 1024,
       top_p: 1,
