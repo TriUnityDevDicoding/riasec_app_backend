@@ -12,8 +12,7 @@ describe('A NewQuestionsAnswer entities', () => {
   it('should throw error when payload did not meet data type specification', () => {
     const payload = {
       questionId: 'question-123',
-      score: true,
-      categoryName: 'Social'
+      score: true
     }
 
     expect(() => new NewQuestionsAnswer(payload)).toThrow(Error('NEW_QUESTIONS_ANSWER.NOT_MEET_DATA_TYPE_SPECIFICATION'))
@@ -22,8 +21,7 @@ describe('A NewQuestionsAnswer entities', () => {
   it('should create newQuestion object correctly', () => {
     const payload = {
       questionId: 'question-123',
-      score: 3,
-      categoryName: 'Social'
+      score: 3
     }
 
     const newQuestion = new NewQuestionsAnswer(payload)
@@ -31,6 +29,5 @@ describe('A NewQuestionsAnswer entities', () => {
     expect(newQuestion).toBeInstanceOf(NewQuestionsAnswer)
     expect(newQuestion.questionId).toEqual(payload.questionId)
     expect(newQuestion.score).toEqual(payload.score)
-    expect(newQuestion.categoryName).toEqual(payload.categoryName)
   })
 })
