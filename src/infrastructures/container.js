@@ -6,6 +6,9 @@ const { nanoid } = require('nanoid')
 const bcrypt = require('bcrypt')
 const Jwt = require('@hapi/jwt')
 const prisma = require('./database/client/prisma-client')
+const Groq = require('groq-sdk')
+
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 // services (repository, helper, manager, etc.)
 const UserRepository = require('../domains/users/user-repository')
@@ -20,6 +23,8 @@ const SessionRepository = require('../domains/sessions/session-repository')
 const SessionRepositoryPostgres = require('./repository/session-repository-postgres')
 const QuizResultRepository = require('../domains/quiz-results/quiz-result-repository')
 const QuizResultRepositoryPostgres = require('./repository/quiz-result-repository-postgres')
+const GroqRepository = require('../domains/groq/groq-repository')
+const GroqRepositoryCloud = require('../infrastructures/repository/groq-repository-cloud')
 const PasswordHash = require('../applications/security/password-hash')
 const BcryptPasswordHash = require('./security/bcrypt-password-hash')
 const DateOfBirthParse = require('../applications/security/date-of-birth-parse')
@@ -101,6 +106,15 @@ container.register([
       dependencies: [
         { concrete: prisma },
         { concrete: nanoid }
+      ]
+    }
+  },
+  {
+    key: GroqRepository.name,
+    Class: GroqRepositoryCloud,
+    parameter: {
+      dependencies: [
+        { concrete: groq }
       ]
     }
   },
@@ -292,6 +306,10 @@ container.register([
         {
           name: 'quizResultRepository',
           internal: QuizResultRepository.name
+        },
+        {
+          name: 'groqRepository',
+          internal: GroqRepository.name
         }
       ]
     }

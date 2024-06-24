@@ -1,9 +1,10 @@
 class AddQuestionsAnswerUseCase {
-  constructor({ questionsAnswerRepository, questionRepository, sessionRepository, quizResultRepository }) {
+  constructor({ questionsAnswerRepository, questionRepository, sessionRepository, quizResultRepository, groqRepository }) {
     this._questionsAnswerRepository = questionsAnswerRepository
     this._questionRepository = questionRepository
     this._sessionRepository = sessionRepository
     this._quizResultRepository = quizResultRepository
+    this._groqRepository = groqRepository
   }
 
   async execute(useCasePayload, credentialId) {
@@ -12,7 +13,13 @@ class AddQuestionsAnswerUseCase {
     const addedQuestionsAnswers = await this._questionsAnswerRepository.addQuestionsAnswers(credentialId, useCasePayload, addedSession.id)
     const countedScores = await this._questionsAnswerRepository.countScores(addedSession.id)
     const mappedCategory = this._createCategoryMap(countedScores)
-    const addedQuizResult = await this._quizResultRepository.addQuizResult(credentialId, mappedCategory, addedSession.id)
+    let groqResponse
+    try {
+      groqResponse = await this._groqRepository.beginPrompt(mappedCategory.Realistic, mappedCategory.Investigative, mappedCategory.Artistic, mappedCategory.Social, mappedCategory.Enterprising, mappedCategory.Conventional)
+    } catch (error) {
+      groqResponse = null
+    }
+    const addedQuizResult = await this._quizResultRepository.addQuizResult(credentialId, mappedCategory, groqResponse, addedSession.id)
     await this._sessionRepository.putQuizResultId(addedSession.id, addedQuizResult.id)
 
     return addedQuestionsAnswers
