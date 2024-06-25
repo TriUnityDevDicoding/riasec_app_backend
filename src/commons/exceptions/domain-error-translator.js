@@ -19,7 +19,9 @@ DomainErrorTranslator._directories = {
   'DELETE_AUTHENTICATION_USE_CASE.NOT_CONTAIN_REFRESH_TOKEN': new InvariantError('must send refresh token.'),
   'DELETE_AUTHENTICATION_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('refresh token must be string.'),
   'NEW_QUESTION.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('cannot create a new question: the required properties are missing.'),
-  'NEW_QUESTION.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('cannot create a new question: the data type does not match.')
+  'NEW_QUESTION.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('cannot create a new question: the data type does not match.'),
+  'NEW_QUESTIONS_ANSWER.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('cannot create a new questions answer: the required properties are missing.'),
+  'NEW_QUESTIONS_ANSWER.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('cannot create a new questions answer: the data type does not match.')
 }
 
 module.exports = DomainErrorTranslator

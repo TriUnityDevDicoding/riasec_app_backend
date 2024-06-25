@@ -49,4 +49,8 @@ describe('QuestionRepositoryPostgres', () => {
       expect(questions[0]).toHaveProperty('category')
     })
   })
+
+  describe('verifyQuestionExist function', () => {
+
+  })
 })

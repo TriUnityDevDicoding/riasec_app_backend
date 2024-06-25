@@ -3,7 +3,7 @@ CREATE TABLE "questions_answers" (
     "id" TEXT NOT NULL,
     "question_id" TEXT NOT NULL,
     "owner" TEXT NOT NULL,
-    "score" TEXT NOT NULL,
+    "score" INT NOT NULL,
     "session_id" TEXT NOT NULL,
     "category_name" TEXT NOT NULL,
 

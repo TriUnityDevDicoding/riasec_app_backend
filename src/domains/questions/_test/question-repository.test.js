@@ -6,7 +6,8 @@ describe('QuestionRepository interface', () => {
     const questionRepository = new QuestionRepository()
 
     // Action & Assert
-    await expect(questionRepository.addQuestion('')).rejects.toThrow(Error('QUESTION_REPOSITORY.METHOD_NOT_IMPLEMENTED'))
+    await expect(questionRepository.addQuestion({})).rejects.toThrow(Error('QUESTION_REPOSITORY.METHOD_NOT_IMPLEMENTED'))
     await expect(questionRepository.getQuestionsByCategory('')).rejects.toThrow(Error('QUESTION_REPOSITORY.METHOD_NOT_IMPLEMENTED'))
+    await expect(questionRepository.verifyQuestionExist({})).rejects.toThrow(Error('QUESTION_REPOSITORY.METHOD_NOT_IMPLEMENTED'))
   })
 })
