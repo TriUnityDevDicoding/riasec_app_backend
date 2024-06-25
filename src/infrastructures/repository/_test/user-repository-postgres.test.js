@@ -176,11 +176,8 @@ describe('UserRepositoryPostgres', () => {
       const userPayloadInDatabase = {
         id: 'user-123',
         fullname: 'John Doe',
-        email: 'johndoe@email.com',
-        password: 'johndoe123',
         dateOfBirth: new Date('2000-03-05'),
-        gender: 'Male',
-        role: 'User'
+        gender: 'Male'
       }
       const updateUserPayloadInDatabase = {
         fullname: 'Mia Doe',
@@ -196,11 +193,8 @@ describe('UserRepositoryPostgres', () => {
       expect(editedUser).toStrictEqual({
         id: 'user-123',
         fullname: updateUserPayloadInDatabase.fullname,
-        email: 'johndoe@email.com',
-        password: userPayloadInDatabase.password,
         dateOfBirth: updateUserPayloadInDatabase.dateOfBirth,
-        gender: updateUserPayloadInDatabase.gender,
-        role: userPayloadInDatabase.role
+        gender: updateUserPayloadInDatabase.gender
       })
     })
   })

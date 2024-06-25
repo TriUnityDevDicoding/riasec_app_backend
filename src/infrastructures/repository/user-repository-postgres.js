@@ -3,7 +3,7 @@ const InvariantError = require('../../commons/exceptions/invariant-error')
 const NotFoundError = require('../../commons/exceptions/not-found-error')
 const RegisteredUser = require('../../domains/users/entities/registered-user')
 const UserRepository = require('../../domains/users/user-repository')
-const { mapDBToRegisteredUser } = require('../utils')
+const { mapDBToRegisteredUser, mapDBToUpdatedUser } = require('../utils')
 
 class UserRepositoryPostgres extends UserRepository {
   constructor (prisma, idGenerator) {
@@ -85,7 +85,7 @@ class UserRepositoryPostgres extends UserRepository {
           gender
         }
       })
-      return mapDBToRegisteredUser(updatedUser)
+      return mapDBToUpdatedUser(updatedUser)
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundError('user failed to update, id not found.')
