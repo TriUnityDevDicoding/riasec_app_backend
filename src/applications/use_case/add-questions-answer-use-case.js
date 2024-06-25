@@ -25,7 +25,7 @@ class AddQuestionsAnswerUseCase {
     const combinedQuestionsAnswers = this._combineArrays(questionsAnswers, questions)
     const addedQuestionsAnswers = await this._questionsAnswerRepository.addQuestionsAnswers(
       credentialId,
-      useCasePayload,
+      combinedQuestionsAnswers,
       addedSession.id
     )
     const countedScores = await this._questionsAnswerRepository.countScores(addedSession.id)
