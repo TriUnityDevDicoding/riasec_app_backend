@@ -35,6 +35,17 @@ class QuizResultRepositoryPostgres extends QuizResultRepository {
 
     return { id: addedQuizResult.id }
   }
+
+  async getQuizResults(credentialId) {
+    return this._prisma.quizResult.findMany({
+      where: {
+        owner: credentialId
+      },
+      orderBy: {
+        created_at: 'desc'
+      }
+    })
+  }
 }
 
 module.exports = QuizResultRepositoryPostgres

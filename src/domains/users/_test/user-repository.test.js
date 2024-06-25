@@ -9,5 +9,6 @@ describe('UserRepository interface', () => {
     await expect(userRepository.getUserByEmail('')).rejects.toThrow(Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED'))
     await expect(userRepository.verifyAvailableEmail('')).rejects.toThrow(Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED'))
     await expect(userRepository.editUser({})).rejects.toThrow(Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED'))
+    await expect(userRepository.editUserPassword({})).rejects.toThrow(Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED'))
   })
 })

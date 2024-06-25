@@ -6,6 +6,7 @@ const users = require('../../interfaces/http/api/users')
 const authentications = require('../../interfaces/http/api/authentications')
 const questions = require('../../interfaces/http/api/questions')
 const questionsAnswers = require('../../interfaces/http/api/questions-answers')
+const quizResults = require('../../interfaces/http/api/quiz-results')
 const config = require('../../commons/config')
 
 const createServer = async (container) => {
@@ -58,6 +59,10 @@ const createServer = async (container) => {
     },
     {
       plugin: questionsAnswers,
+      options: { container }
+    },
+    {
+      plugin: quizResults,
       options: { container }
     }
   ])

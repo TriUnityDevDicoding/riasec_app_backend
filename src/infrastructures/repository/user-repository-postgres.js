@@ -93,6 +93,50 @@ class UserRepositoryPostgres extends UserRepository {
       throw new InvariantError('an unexpected error occured.')
     }
   }
+
+  async editUserPassword (id, userIdCredentials, updateUserPassword) {
+
+    if (id !== userIdCredentials) {
+      throw new AuthorizationError('this user does not belong to credential user.')
+    }
+
+    try {
+      await this._prisma.user.update({
+        where: {
+          id
+        },
+        data: {
+          password: updateUserPassword
+        }
+      })
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundError('user failed to update, id not found.')
+      }
+      throw new InvariantError('an unexpected error occured.')
+    }
+  }
+
+  async getUserPasswordById (id, userIdCredentials) {
+    const findUser = await this._prisma.user.findUnique({
+      where: {
+        id
+      },
+      select: {
+        password: true
+      }
+    })
+
+    if (id !== userIdCredentials) {
+      throw new AuthorizationError('this user does not belong to credential user.')
+    }
+
+    if (!findUser) {
+      throw new NotFoundError('user data not found.')
+    }
+
+    return findUser.password
+  }
 }
 
 module.exports = UserRepositoryPostgres

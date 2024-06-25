@@ -204,4 +204,39 @@ describe('UserRepositoryPostgres', () => {
       })
     })
   })
+
+  describe('getUserPasswordById function', () => {
+    it('should throw AuthorizationError when user does not belong to credential user', async () => {
+      const userIdCredentials = 'user-111'
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      return expect(userRepositoryPostgres.getUserPasswordById('user-123', userIdCredentials)).rejects.toThrow(AuthorizationError)
+    })
+
+    it('should throw NotFoundError when user not found.', async () => {
+      const userIdCredentials = 'user-123'
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      return expect(userRepositoryPostgres.getUserPasswordById('user-123', userIdCredentials)).rejects.toThrow(NotFoundError)
+    })
+
+    it('should run function getUserById correctly and return expected properties', async () => {
+      const userIdCredentials = 'user-123'
+      const userPayloadInDatabase = {
+        id: 'user-123',
+        fullname: 'John Doe',
+        email: 'johndoe@email.com',
+        password: 'johndoe123',
+        dateOfBirth: new Date('2000-03-05'),
+        gender: 'Male',
+        role: 'User'
+      }
+      await UsersTableTestHelper.addUser({ ...userPayloadInDatabase })
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      const userPassword = await userRepositoryPostgres.getUserPasswordById(userPayloadInDatabase.id, userIdCredentials)
+
+      expect(userPassword).not.toEqual(null)
+    })
+  })
 })

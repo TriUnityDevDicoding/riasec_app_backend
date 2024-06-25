@@ -21,7 +21,9 @@ DomainErrorTranslator._directories = {
   'NEW_QUESTION.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('cannot create a new question: the required properties are missing.'),
   'NEW_QUESTION.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('cannot create a new question: the data type does not match.'),
   'NEW_QUESTIONS_ANSWER.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('cannot create a new questions answer: the required properties are missing.'),
-  'NEW_QUESTIONS_ANSWER.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('cannot create a new questions answer: the data type does not match.')
+  'NEW_QUESTIONS_ANSWER.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('cannot create a new questions answer: the data type does not match.'),
+  'UPDATE_USER_PASSWORD.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('cannot update user password: the required properties are missing.'),
+  'UPDATE_USER_PASSWORD.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('cannot update user password: the data type does not match.')
 }
 
 module.exports = DomainErrorTranslator
