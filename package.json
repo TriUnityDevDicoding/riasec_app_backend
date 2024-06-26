@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/app.js",
   "prisma": {
-    "seed": "node src/infrastructures/database/seed/seed.js"
+    "seed": "node prisma/seed/seed.js"
   },
   "scripts": {
     "start": "node src/app.js",

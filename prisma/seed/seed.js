@@ -1,5 +1,5 @@
-/* istanbul ignore file */
-const prisma = require('../client/prisma-client')
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
 
 const seeds = [
   require('./local_data/users'),
@@ -7,6 +7,11 @@ const seeds = [
 ]
 
 const run = async () => {
+  if (process.env.NODE_ENV === 'test') {
+    console.log('seeding skipped in test environment.')
+    return
+  }
+
   for (const seed of seeds) {
     await seed()
   }
@@ -15,7 +20,6 @@ const run = async () => {
 (async () => {
   try {
     await run()
-    console.log('seeding completed successfully.')
   } catch (e) {
     console.error('error running seeds:', e)
     process.exit(1)

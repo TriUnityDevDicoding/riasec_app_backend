@@ -1,5 +1,5 @@
-/* istanbul ignore file */
-const prisma = require('../../client/prisma-client')
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
 const bcrypt = require('bcrypt')
 const { nanoid } = require('nanoid')
 
