@@ -1,43 +1,25 @@
+/* istanbul ignore file */
 const prisma = require('../client/prisma-client')
-const bcrypt = require('bcrypt')
-const { nanoid } = require('nanoid');
+
+const seeds = [
+  require('./local_data/users'),
+  require('./local_data/questions')
+]
+
+const run = async () => {
+  for (const seed of seeds) {
+    await seed()
+  }
+}
 
 (async () => {
-  const admin = await prisma.user.upsert({
-    where: { email: 'riasecadmin@tudev.id' },
-    update: {},
-    create: {
-      id: `user-${nanoid(16)}`,
-      full_name: 'Riasec Admin',
-      email: 'riasecadmin@tudev.id',
-      password: await bcrypt.hash('riasecadmin123', 10),
-      date_of_birth: new Date(),
-      gender: 'Male',
-      role: 'Admin'
-    }
-  })
-
-  const user = await prisma.user.upsert({
-    where: { email: 'riasecuser@tudev.id' },
-    update: {},
-    create: {
-      id: `user-${nanoid(16)}`,
-      full_name: 'Riasec User',
-      email: 'riasecuser@tudev.id',
-      password: await bcrypt.hash('riasecuser123', 10),
-      date_of_birth: new Date(),
-      gender: 'Female',
-      role: 'User'
-    }
-  })
-
-  console.log({ admin, user })
-})()
-  .then(async () => {
-    await prisma.$disconnect()
-  })
-  .catch(async e => {
-    console.error(e)
-    await prisma.$disconnect()
+  try {
+    await run()
+    console.log('seeding completed successfully.')
+  } catch (e) {
+    console.error('error running seeds:', e)
     process.exit(1)
-  })
+  } finally {
+    await prisma.$disconnect()
+  }
+})()

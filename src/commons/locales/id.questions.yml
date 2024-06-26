@@ -1,0 +1,56 @@
+id:
+  questions:
+    question1:
+      question: 'Saya menikmati bekerja dengan alat dan mesin.'
+      category: 'Realistic'
+    question2:
+      question: 'Saya suka memecahkan masalah dan teka-teki yang kompleks.'
+      category: 'Investigative'
+    question3:
+      question: 'Saya menikmati kegiatan kreatif seperti melukis, menulis, atau bermusik.'
+      category: 'Artistic'
+    question4:
+      question: 'Saya suka membantu orang lain dan bekerja dalam tim.'
+      category: 'Social'
+    question5:
+      question: 'Saya antusias ketika saya dapat memimpin sebuah proyek dan dapat mengambil inisiatif.'
+      category: 'Enterprising'
+    question6:
+      question: 'Saya menikmati pekerjaan yang membutuhkan ketelitian dan perhatian terhadap detail.'
+      category: 'Conventional'
+    question7:
+      question: 'Saya suka melakukan aktifitas fisik dan pekerjaan di luar ruangan.'
+      category: 'Realistic'
+    question8:
+      question: 'Saya suka melakukan penelitian dan mengumpulkan informasi untuk memahami sesuatu secara mendalam.'
+      category: 'Investigative'
+    question9:
+      question: 'Saya lebih suka pekerjaan yang memungkinkan saya mengekspresikan diri daripada pekerjaan yang rutin dan terstruktur.'
+      category: 'Artistic'
+    question10:
+      question: 'Saya merasa senang ketika bisa memberikan nasihat atau bimbingan kepada orang lain.'
+      category: 'Social'
+    question11:
+      question: 'Saya merasa senang ketika bisa mempengaruhi dan meyakinkan orang lain.'
+      category: 'Enterprising'
+    question12:
+      question: 'Saya merasa nyaman dengan pekerjaan yang rutin dan terorganisir.'
+      category: 'Conventional'
+    question13:
+      question: 'Saya lebih suka pekerjaan yang melibatkan keterampilan tangan daripada pekerjaan yang membutuhkan banyak pemikiran abstrak.'
+      category: 'Realistic'
+    question14:
+      question: 'Saya tertarik pada profesi di bidang sains, seperti ahli biologi, fisikawan, atau analis data.'
+      category: 'Investigative'
+    question15:
+      question: 'Saya sering mencari cara baru dan inovatif untuk menyelesaikan masalah.'
+      category: 'Artistic'
+    question16:
+      question: 'Saya sering mencari kesempatan untuk berkolaborasi dengan orang lain dalam menyelesaikan tugas.'
+      category: 'Social'
+    question17:
+      question: 'Saya sering mencari peluang untuk mengembangkan bisnis atau proyek baru.'
+      category: 'Enterprising'
+    question18:
+      question: 'Saya sering mencari cara untuk meningkatkan efisiensi dan produktivitas dalam pekerjaan saya.'
+      category: 'Conventional'
