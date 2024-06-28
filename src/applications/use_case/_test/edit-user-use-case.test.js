@@ -1,5 +1,5 @@
 const UpdateUser = require('../../../domains/users/entities/update-user')
-const RegisteredUser = require('../../../domains/users/entities/registered-user')
+const UpdatedUser = require('../../../domains/users/entities/updated-user')
 const UserRepository = require('../../../domains/users/user-repository')
 const DateofBirthParse = require('../../security/date-of-birth-parse')
 const EditUserUseCase = require('../edit-user-use-case')
@@ -16,12 +16,13 @@ describe('EditUserUseCase', () => {
       dateOfBirth: '2000-03-05',
       gender: 'Male'
     })
-    const expectedUpdatedUser = new RegisteredUser({
+    const expectedUpdatedUser = new UpdatedUser({
       id: useCaseParams.id,
       fullname: useCasePayload.fullname,
       email: 'johndoe@email.com',
       dateOfBirth: useCasePayload.dateOfBirth,
-      gender: useCasePayload.gender
+      gender: useCasePayload.gender,
+      role: 'User'
     })
 
     const mockUserRepository = new UserRepository()
@@ -34,7 +35,8 @@ describe('EditUserUseCase', () => {
         fullname: useCasePayload.fullname,
         email: 'johndoe@email.com',
         dateOfBirth: dateOfBirthObj,
-        gender: useCasePayload.gender
+        gender: useCasePayload.gender,
+        role: 'User'
       }))
     mockDateOfBirthParse.parseToString = jest.fn(() => Promise.resolve('2000-03-05'))
 

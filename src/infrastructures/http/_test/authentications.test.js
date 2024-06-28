@@ -32,7 +32,8 @@ describe('/authentications endpoint', () => {
           email: 'johndoe@email.com',
           password: 'johndoe123',
           dateOfBirth: '2000-03-05',
-          gender: 'Male'
+          gender: 'Male',
+          role: 'User'
         }
       })
 
@@ -89,7 +90,8 @@ describe('/authentications endpoint', () => {
           email: 'johndoe@email.com',
           password: 'johndoe123',
           dateOfBirth: '2000-03-05',
-          gender: 'Male'
+          gender: 'Male',
+          role: 'User'
         }
       })
 
@@ -164,7 +166,8 @@ describe('/authentications endpoint', () => {
           email: 'johndoe@email.com',
           password: 'johndoe123',
           dateOfBirth: '2000-03-05',
-          gender: 'Male'
+          gender: 'Male',
+          role: 'User'
         }
       })
       // login user

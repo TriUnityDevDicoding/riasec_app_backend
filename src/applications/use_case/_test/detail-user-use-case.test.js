@@ -15,14 +15,16 @@ describe('DetailUserUseCase', () => {
       fullname: 'John Doe',
       email: 'johndoe@email.com',
       dateOfBirth: dateOfBirthObj,
-      gender: 'Male'
+      gender: 'Male',
+      role: 'User'
     }
     const expectedDetailUser = new RegisteredUser({
       id: userPayloadInDatabase.id,
       fullname: userPayloadInDatabase.fullname,
       email: userPayloadInDatabase.email,
       dateOfBirth: '2000-03-05',
-      gender: userPayloadInDatabase.gender
+      gender: userPayloadInDatabase.gender,
+      role: userPayloadInDatabase.role
     })
 
     const mockUserRepository = new UserRepository()

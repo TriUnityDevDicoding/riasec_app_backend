@@ -12,7 +12,8 @@ describe('AddUserUseCase', () => {
       email: 'johndoe@email.com',
       password: 'johndoe123',
       dateOfBirth: '2000-03-05',
-      gender: 'Male'
+      gender: 'Male',
+      role: 'User'
     })
     const addedUser = {
       id: 'user-123'
@@ -44,7 +45,8 @@ describe('AddUserUseCase', () => {
       email: useCasePayload.email,
       password: 'encrypted_password',
       dateOfBirth: dateOfBirthObj,
-      gender: useCasePayload.gender
+      gender: useCasePayload.gender,
+      role: useCasePayload.role
     })
   })
 })

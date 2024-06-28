@@ -19,11 +19,7 @@ class UserRepository {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
 
-  async getPasswordByEmail(email) {
-    throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
-  }
-
-  async getIdByEmail(email) {
+  async editUserPassword (id, updateUserPassword) {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
 }

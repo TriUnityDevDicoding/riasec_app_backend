@@ -13,7 +13,8 @@ describe('/users endpoint', () => {
     email: 'michael@email.com',
     password: 'michaeldoe123',
     dateOfBirth: '2000-09-15',
-    gender: 'Male'
+    gender: 'Male',
+    role: 'User'
   }
 
   beforeEach(async () => {
@@ -52,7 +53,8 @@ describe('/users endpoint', () => {
         email: 'johndoe@email.com',
         password: 'johndoe123',
         dateOfBirth: '2000-03-05',
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }
 
       const response = await server.inject({
@@ -72,7 +74,8 @@ describe('/users endpoint', () => {
         fullname: 'John Doe',
         email: 'johndoe@email.com',
         dateOfBirth: 'johndoe123',
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }
 
       const response = await server.inject({
@@ -93,7 +96,8 @@ describe('/users endpoint', () => {
         email: true,
         password: 'johndoe123',
         dateOfBirth: 'March 5th',
-        gender: 'Man'
+        gender: 'Man',
+        role: 'Root'
       }
 
       const response = await server.inject({
@@ -114,7 +118,8 @@ describe('/users endpoint', () => {
         email: 'johndoe',
         password: 'johndoe123',
         dateOfBirth: 'johndoe123',
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }
 
       const response = await server.inject({
@@ -136,7 +141,8 @@ describe('/users endpoint', () => {
         email: 'johndoe@email.com',
         password: 'johndoe123',
         dateOfBirth: 'johndoe123',
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }
 
       const response = await server.inject({
@@ -351,6 +357,176 @@ describe('/users endpoint', () => {
       expect(response.statusCode).toEqual(400)
       expect(responseJson.status).toEqual('fail')
       expect(responseJson.message).toEqual('cannot update user: the data type does not match.')
+    })
+  })
+
+  describe('when PUT /users/password', () => {
+    it('should response 200 and persisted update user password', async () => {
+      const requestPayload = {
+        currentPassword: 'michaeldoe123',
+        newPassword: '123'
+      }
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/users/${addedUser.id}/password`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(200)
+      expect(responseJson.status).toEqual('success')
+    })
+
+    it('should response 403 when user does not belong to credential user', async () => {
+      const requestPayload = {
+        currentPassword: 'michaeldoe123',
+        newPassword: '123'
+      }
+      const userDummy = {
+        id: 'user-111'
+      }
+      await UsersTableTestHelper.addUser({ ...userDummy })
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/users/${userDummy.id}/password`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(403)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('this user does not belong to credential user.')
+    })
+
+    it('should response 401 when user does not login', async () => {
+      const requestPayload = {
+        currentPassword: 'michaeldoe123',
+        newPassword: '123'
+      }
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/users/${addedUser.id}/password`,
+        payload: requestPayload,
+        headers: {
+          Authorization: 'Bearer accessToken'
+        }
+      })
+
+      expect(response.statusCode).toStrictEqual(401)
+    })
+
+    it('should response 404 when user not found', async () => {
+      await UsersTableTestHelper.deleteUserByid(addedUser.id)
+      const requestPayload = {
+        currentPassword: 'michaeldoe123',
+        newPassword: '123'
+      }
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/users/${addedUser.id}/password`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(404)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('user data not found.')
+    })
+
+    it('should response 400 when request payload not contain needed property', async () => {
+      const requestPayload = {
+        currentPassword: 'michaeldoe123'
+      }
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/users/${addedUser.id}/password`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(400)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('cannot update user password: the required properties are missing.')
+    })
+
+    it('should response 400 when request payload not meet data type specification', async () => {
+      const requestPayload = {
+        currentPassword: 'michaeldoe123',
+        newPassword: true
+      }
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/users/${addedUser.id}/password`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(400)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('cannot update user password: the data type does not match.')
+    })
+
+    it('should response 401 when current password is wrong', async () => {
+      const requestPayload = {
+        currentPassword: 'michaeldoe1234',
+        newPassword: '123'
+      }
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/users/${addedUser.id}/password`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(401)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('the credentials you entered are incorrect.')
+    })
+
+    it('should response 400 when new password is the same as current password', async () => {
+      const requestPayload = {
+        currentPassword: 'michaeldoe123',
+        newPassword: 'michaeldoe123'
+      }
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/users/${addedUser.id}/password`,
+        payload: requestPayload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(400)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('the new password cannot be the same as the old password.')
     })
   })
 })

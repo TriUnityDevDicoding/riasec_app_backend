@@ -5,14 +5,28 @@ const mapDBToRegisteredUser = ({
   email,
   password,
   date_of_birth,
-  gender
+  gender,
+  role
 }) => ({
   id,
   fullname: full_name,
   email,
   password,
   dateOfBirth: date_of_birth,
-  gender
+  gender,
+  role
 })
 
-module.exports = { mapDBToRegisteredUser }
+const mapDBToUpdatedUser = ({
+  id,
+  full_name,
+  date_of_birth,
+  gender,
+}) => ({
+  id,
+  fullname: full_name,
+  dateOfBirth: date_of_birth,
+  gender,
+})
+
+module.exports = { mapDBToRegisteredUser, mapDBToUpdatedUser }

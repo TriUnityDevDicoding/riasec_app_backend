@@ -32,7 +32,8 @@ describe('GetAuthenticationUseCase', () => {
         email: 'johndoe@email.com',
         password: 'encrypted_password',
         dateOfBirth: '2000-03-05',
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }))
     mockPasswordHash.compare = jest.fn()
       .mockImplementation(() => Promise.resolve())
@@ -71,7 +72,8 @@ describe('GetAuthenticationUseCase', () => {
         id: 'user-123',
         fullname: 'John Doe',
         dateOfBirth: '2000-03-05',
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       })
     expect(mockAuthenticationTokenManager.createRefreshToken)
       .toHaveBeenCalledWith({
@@ -79,7 +81,8 @@ describe('GetAuthenticationUseCase', () => {
         id: 'user-123',
         fullname: 'John Doe',
         dateOfBirth: '2000-03-05',
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       })
     expect(mockAuthenticationRepository.addToken)
       .toHaveBeenCalledWith(mockedAuthentication.refreshToken)

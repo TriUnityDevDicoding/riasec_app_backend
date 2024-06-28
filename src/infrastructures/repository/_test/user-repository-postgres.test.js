@@ -22,7 +22,8 @@ describe('UserRepositoryPostgres', () => {
         email: 'johndoe@email.com',
         password: 'johndoe123',
         dateOfBirth: new Date('2000-03-05'),
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }
       const fakeIdGenerator = () => '123'
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, fakeIdGenerator)
@@ -58,7 +59,8 @@ describe('UserRepositoryPostgres', () => {
         email: 'johndoe@email.com',
         password: 'johndoe123',
         dateOfBirth: new Date('2000-03-05'),
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }
       await UsersTableTestHelper.addUser({ ...userPayloadInDatabase })
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
@@ -70,11 +72,13 @@ describe('UserRepositoryPostgres', () => {
       expect(detailUser.email).toStrictEqual(userPayloadInDatabase.email)
       expect(detailUser.dateOfBirth).toStrictEqual(userPayloadInDatabase.dateOfBirth)
       expect(detailUser.gender).toStrictEqual(userPayloadInDatabase.gender)
+      expect(detailUser.role).toStrictEqual(userPayloadInDatabase.role)
       expect(detailUser).toHaveProperty('id')
       expect(detailUser).toHaveProperty('fullname')
       expect(detailUser).toHaveProperty('email')
       expect(detailUser).toHaveProperty('dateOfBirth')
       expect(detailUser).toHaveProperty('gender')
+      expect(detailUser).toHaveProperty('role')
     })
   })
 
@@ -92,7 +96,8 @@ describe('UserRepositoryPostgres', () => {
         email: 'johndoe@email.com',
         password: 'johndoe123',
         dateOfBirth: new Date('2000-03-05'),
-        gender: 'Male'
+        gender: 'Male',
+        role: 'User'
       }
       await UsersTableTestHelper.addUser({ ...userPayloadInDatabase })
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
@@ -104,11 +109,13 @@ describe('UserRepositoryPostgres', () => {
       expect(detailUser.email).toStrictEqual(userPayloadInDatabase.email)
       expect(detailUser.dateOfBirth).toStrictEqual(userPayloadInDatabase.dateOfBirth)
       expect(detailUser.gender).toStrictEqual(userPayloadInDatabase.gender)
+      expect(detailUser.role).toStrictEqual(userPayloadInDatabase.role)
       expect(detailUser).toHaveProperty('id')
       expect(detailUser).toHaveProperty('fullname')
       expect(detailUser).toHaveProperty('email')
       expect(detailUser).toHaveProperty('dateOfBirth')
       expect(detailUser).toHaveProperty('gender')
+      expect(detailUser).toHaveProperty('role')
     })
   })
 
@@ -169,8 +176,6 @@ describe('UserRepositoryPostgres', () => {
       const userPayloadInDatabase = {
         id: 'user-123',
         fullname: 'John Doe',
-        email: 'johndoe@email.com',
-        password: 'johndoe123',
         dateOfBirth: new Date('2000-03-05'),
         gender: 'Male'
       }
@@ -188,60 +193,44 @@ describe('UserRepositoryPostgres', () => {
       expect(editedUser).toStrictEqual({
         id: 'user-123',
         fullname: updateUserPayloadInDatabase.fullname,
-        email: 'johndoe@email.com',
-        password: userPayloadInDatabase.password,
         dateOfBirth: updateUserPayloadInDatabase.dateOfBirth,
         gender: updateUserPayloadInDatabase.gender
       })
     })
   })
 
-  describe('getPasswordByEmail', () => {
-    it('should throw InvariantError when user not found', () => {
-      // Arrange
+  describe('getUserPasswordById function', () => {
+    it('should throw AuthorizationError when user does not belong to credential user', async () => {
+      const userIdCredentials = 'user-111'
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
 
-      // Action & Assert
-      return expect(userRepositoryPostgres.getPasswordByEmail('johndoe@email.com'))
-        .rejects
-        .toThrow(InvariantError)
+      return expect(userRepositoryPostgres.getUserPasswordById('user-123', userIdCredentials)).rejects.toThrow(AuthorizationError)
     })
 
-    it('should return email password when user is found', async () => {
-      // Arrange
+    it('should throw NotFoundError when user not found.', async () => {
+      const userIdCredentials = 'user-123'
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
-      await UsersTableTestHelper.addUser({
+
+      return expect(userRepositoryPostgres.getUserPasswordById('user-123', userIdCredentials)).rejects.toThrow(NotFoundError)
+    })
+
+    it('should run function getUserById correctly and return expected properties', async () => {
+      const userIdCredentials = 'user-123'
+      const userPayloadInDatabase = {
+        id: 'user-123',
+        fullname: 'John Doe',
         email: 'johndoe@email.com',
-        password: 'secret_password'
-      })
-
-      // Action & Assert
-      const password = await userRepositoryPostgres.getPasswordByEmail('johndoe@email.com')
-      expect(password).toBe('secret_password')
-    })
-  })
-
-  describe('getIdByEmail', () => {
-    it('should throw InvariantError when user not found', async () => {
-      // Arrange
+        password: 'johndoe123',
+        dateOfBirth: new Date('2000-03-05'),
+        gender: 'Male',
+        role: 'User'
+      }
+      await UsersTableTestHelper.addUser({ ...userPayloadInDatabase })
       const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
 
-      // Action & Assert
-      await expect(userRepositoryPostgres.getIdByEmail('johndoe@email.com'))
-        .rejects
-        .toThrow(InvariantError)
-    })
+      const userPassword = await userRepositoryPostgres.getUserPasswordById(userPayloadInDatabase.id, userIdCredentials)
 
-    it('should return user id correctly', async () => {
-      // Arrange
-      await UsersTableTestHelper.addUser({ id: 'user-321', email: 'johndoe@email.com' })
-      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
-
-      // Action
-      const userId = await userRepositoryPostgres.getIdByEmail('johndoe@email.com')
-
-      // Assert
-      expect(userId).toEqual('user-321')
+      expect(userPassword).not.toEqual(null)
     })
   })
 })

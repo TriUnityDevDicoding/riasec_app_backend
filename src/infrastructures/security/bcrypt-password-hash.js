@@ -1,5 +1,6 @@
 const PasswordHash = require('../../applications/security/password-hash')
 const AuthenticationError = require('../../commons/exceptions/authentication-error')
+const InvariantError = require('../../commons/exceptions/invariant-error')
 
 class BcryptPasswordHash extends PasswordHash {
   constructor (bcrypt, saltRound = 10) {
@@ -17,6 +18,14 @@ class BcryptPasswordHash extends PasswordHash {
 
     if (!result) {
       throw new AuthenticationError('the credentials you entered are incorrect.')
+    }
+  }
+
+  async compareSame(password, hashedPassword) {
+    const result = await this._bcrypt.compare(password, hashedPassword)
+
+    if (result) {
+      throw new InvariantError('the new password cannot be the same as the old password.')
     }
   }
 }

@@ -4,9 +4,12 @@ const ClientError = require('../../commons/exceptions/client-error')
 const DomainErrorTranslator = require('../../commons/exceptions/domain-error-translator')
 const users = require('../../interfaces/http/api/users')
 const authentications = require('../../interfaces/http/api/authentications')
+const questions = require('../../interfaces/http/api/questions')
+const questionsAnswers = require('../../interfaces/http/api/questions-answers')
+const quizResults = require('../../interfaces/http/api/quiz-results')
 const config = require('../../commons/config')
 
-const createServer = async container => {
+const createServer = async (container) => {
   const server = Hapi.server({
     host: config.app.host,
     port: config.app.port,
@@ -14,7 +17,7 @@ const createServer = async container => {
     routes: {
       cors: {
         origin: [config.app.corsOrigin],
-        headers: ['Accept', 'Content-Type']
+        headers: ['Accept', 'Content-Type', 'Authorization']
       }
     }
   })
@@ -36,7 +39,8 @@ const createServer = async container => {
     validate: (artifacts) => ({
       isValid: true,
       credentials: {
-        id: artifacts.decoded.payload.id
+        id: artifacts.decoded.payload.id,
+        role: artifacts.decoded.payload.role
       }
     })
   })
@@ -48,6 +52,18 @@ const createServer = async container => {
     },
     {
       plugin: authentications,
+      options: { container }
+    },
+    {
+      plugin: questions,
+      options: { container }
+    },
+    {
+      plugin: questionsAnswers,
+      options: { container }
+    },
+    {
+      plugin: quizResults,
       options: { container }
     }
   ])
