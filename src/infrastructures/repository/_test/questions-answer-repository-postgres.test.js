@@ -27,17 +27,15 @@ describe('QuestionRepositoryPostgres', () => {
         }
       ]
       await UsersTableTestHelper.addUser({ id: 'user-123' })
-      const findUser = await UsersTableTestHelper.findUserById('user-123')
-      await SessionsTableTestHelper.addSession({ id: 'session-123', quizResultId: null, owner: findUser.id })
-      const findSession = await SessionsTableTestHelper.findSessionById('session-123')
+      await SessionsTableTestHelper.addSession({ id: 'session-123', quizResultId: null, owner: 'user-123' })
       await QuestionsTableTestHelper.addQuestion({ id: 'question-123' })
       const fakeIdGenerator = () => '123'
       const questionsAnswerRepositoryPostgres = new QuestionsAnswerRepositoryPostgres(prisma, fakeIdGenerator)
 
       const addedQuestionsAnswer = await questionsAnswerRepositoryPostgres.addQuestionsAnswers(
-        findUser.id,
+        'user-123',
         questionsAnswerPayloadInDatabase,
-        findSession.id
+        'session-123'
       )
 
       const findQuestionsAnswer = await QuestionsAnswerTableTestHelper.findQuestionsAnswerById(
@@ -51,19 +49,15 @@ describe('QuestionRepositoryPostgres', () => {
   describe('countScores function', () => {
     it('should run function getQuestionsByCategory correctly and return expected properties', async () => {
       await UsersTableTestHelper.addUser({ id: 'user-123' })
-      const findUser = await UsersTableTestHelper.findUserById('user-123')
-      await SessionsTableTestHelper.addSession({ id: 'session-123', quizResultId: null, owner: findUser.id })
-      const findSession = await SessionsTableTestHelper.findSessionById('session-123')
-      await QuestionsTableTestHelper.addQuestion({ id: 'question-123' })
-      const findQuestion = await QuestionsTableTestHelper.findQuestionById('question-123')
-      const score = 12
-      await QuestionsAnswerTableTestHelper.addQuestionsAnswer({ id: 'questions-answer-123', questionId: findQuestion.id, owner: findUser.id, score, sessionId: findSession.id, categoryName: findQuestion.category })
+      await SessionsTableTestHelper.addSession({ id: 'session-123', quizResultId: null, owner: 'user-123' })
+      await QuestionsTableTestHelper.addQuestion({ id: 'question-123', category: 'Social' })
+      await QuestionsAnswerTableTestHelper.addQuestionsAnswer({ id: 'questions-answer-123', questionId: 'question-123', owner: 'user-123', score: 12, sessionId: 'session-123', categoryName: 'Social' })
       const questionsAnswerRepositoryPostgres = new QuestionsAnswerRepositoryPostgres(prisma, {})
 
-      const countQuestionsAnswerScore = await questionsAnswerRepositoryPostgres.countScores(findSession.id)
+      const countQuestionsAnswerScore = await questionsAnswerRepositoryPostgres.countScores('session-123')
 
-      expect(countQuestionsAnswerScore[0]._sum.score).toStrictEqual(score)
-      expect(countQuestionsAnswerScore[0].category_name).toStrictEqual(findQuestion.category)
+      expect(countQuestionsAnswerScore[0]._sum.score).toStrictEqual(12)
+      expect(countQuestionsAnswerScore[0].category_name).toStrictEqual('Social')
     })
   })
 })
