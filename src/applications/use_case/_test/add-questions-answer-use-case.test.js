@@ -79,4 +79,71 @@ describe('AddQuestionsAnswerUseCase', () => {
       new AddedQuestionsAnswer({ id: 'questions-answer-234' })
     ])
   })
+
+  it('should handle the catch block when groqResponse fails', async () => {
+    const useCasePayload = [
+      { questionId: 'question-123', score: 3 },
+      { questionId: 'question-234', score: 4 }
+    ]
+    const credentialId = 'user-123'
+
+    const mockQuestionsAnswerRepository = new QuestionsAnswerRepository()
+    const mockQuestionRepository = new QuestionRepository()
+    const mockSessionRepository = new SessionRepository()
+    const mockQuizResultRepository = new QuizResultRepository()
+    const mockGroqRepository = new GroqRepository()
+
+    mockQuestionRepository.verifyQuestionExist = jest.fn(() =>
+      Promise.resolve([
+        { id: 'question-123', categoryName: 'Artistic' },
+        { id: 'question-234', categoryName: 'Investigative' }
+      ])
+    )
+    mockSessionRepository.addSession = jest.fn(() => Promise.resolve({ id: 'session-123' }))
+    mockQuestionsAnswerRepository.addQuestionsAnswers = jest.fn(() => Promise.resolve([
+      { id: 'questions-answer-123'},
+      { id: 'questions-answer-234'}
+    ]))
+    mockQuestionsAnswerRepository.countScores = jest.fn(() =>
+      Promise.resolve([
+        { _sum: { score: 3 }, category_name: 'Artistic' },
+        { _sum: { score: 4 }, category_name: 'Investigative' }
+      ])
+    )
+    mockGroqRepository.beginPrompt = jest.fn(() => Promise.reject(new Error()))
+    mockQuizResultRepository.addQuizResult = jest.fn(() => Promise.resolve({ id: 'quiz-result-123' }))
+    mockSessionRepository.putQuizResultId = jest.fn(() => Promise.resolve())
+
+    const addQuestionsAnswerUseCase = new AddQuestionsAnswerUseCase({
+      questionsAnswerRepository: mockQuestionsAnswerRepository,
+      questionRepository: mockQuestionRepository,
+      sessionRepository: mockSessionRepository,
+      quizResultRepository: mockQuizResultRepository,
+      groqRepository: mockGroqRepository
+    })
+
+    const addedQuestionsAnswers = await addQuestionsAnswerUseCase.execute(useCasePayload, credentialId)
+
+    expect(mockGroqRepository.beginPrompt).toHaveBeenCalled()
+    expect(mockQuizResultRepository.addQuizResult).toHaveBeenCalledWith(
+      credentialId,
+      expect.any(Object),
+      null,
+      'session-123'
+    )
+    expect(addedQuestionsAnswers.map(item => new AddedQuestionsAnswer(item))).toEqual([
+      new AddedQuestionsAnswer({ id: 'questions-answer-123' }),
+      new AddedQuestionsAnswer({ id: 'questions-answer-234' })
+    ])
+  })
+
+  it('should return the original item if no match found in _combineArrays function', async () => {
+    const addQuestionsAnswerUseCase = new AddQuestionsAnswerUseCase({})
+
+    const array1 = [{ questionId: 'question-123', score: 3 }]
+    const array2 = [{ id: 'question-234', categoryName: 'Investigative' }]
+    const combined = addQuestionsAnswerUseCase._combineArrays(array1, array2)
+
+    expect(combined).toEqual(array1)
+  })
 })

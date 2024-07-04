@@ -1,5 +1,6 @@
 const QuestionsTableTestHelper = require('../../../../tests/questions-table-test-helper')
 const prisma = require('../../database/client/prisma-client')
+const NotFoundError = require('../../../commons/exceptions/not-found-error')
 const QuestionRepositoryPostgres = require('../question-repository-postgres')
 
 describe('QuestionRepositoryPostgres', () => {
@@ -51,6 +52,22 @@ describe('QuestionRepositoryPostgres', () => {
   })
 
   describe('verifyQuestionExist function', () => {
+    it('should throw NotFoundError when question not found', async () => {
+      const questionPayloadInDatabase = [
+        {
+          id: 'question-123',
+          question: 'Saya lebih suka untuk bekerja sendiri dibanding dengan bekerja bersama orang lain',
+          category: 'Social'
+        }
+      ]
+      const mapQuestionPayload = questionPayloadInDatabase.map(question => ({
+        questionId: question.id
+      }))
+      const questionRepositoryPostgres = new QuestionRepositoryPostgres(prisma, {})
+
+      return expect(questionRepositoryPostgres.verifyQuestionExist(mapQuestionPayload)).rejects.toThrow(NotFoundError)
+    })
+
     it('should check the question and return question id correctly', async () => {
       const questionPayloadInDatabase = [
         {

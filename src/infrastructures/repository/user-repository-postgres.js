@@ -95,7 +95,6 @@ class UserRepositoryPostgres extends UserRepository {
   }
 
   async editUserPassword (id, userIdCredentials, updateUserPassword) {
-
     if (id !== userIdCredentials) {
       throw new AuthorizationError('this user does not belong to credential user.')
     }
