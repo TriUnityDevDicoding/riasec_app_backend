@@ -1,3 +1,4 @@
+const AuthorizationError = require('../../commons/exceptions/authorization-error')
 const QuizResultRepository = require('../../domains/quiz-results/quiz-result-repository')
 
 class QuizResultRepositoryPostgres extends QuizResultRepository {
@@ -38,7 +39,7 @@ class QuizResultRepositoryPostgres extends QuizResultRepository {
   }
 
   async getQuizResults(credentialId) {
-    return this._prisma.quizResult.findMany({
+    return await this._prisma.quizResult.findMany({
       where: {
         owner: credentialId
       },
