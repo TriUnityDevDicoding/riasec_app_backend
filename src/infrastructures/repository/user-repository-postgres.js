@@ -5,14 +5,18 @@ const RegisteredUser = require('../../domains/users/entities/registered-user')
 const UserRepository = require('../../domains/users/user-repository')
 const { mapDBToRegisteredUser, mapDBToUpdatedUser } = require('../utils')
 
+const createLog = require('../logging/winston')
+
+const log = createLog('login')
+
 class UserRepositoryPostgres extends UserRepository {
-  constructor (prisma, idGenerator) {
+  constructor(prisma, idGenerator) {
     super()
     this._prisma = prisma
     this._idGenerator = idGenerator
   }
 
-  async addUser (registerUser) {
+  async addUser(registerUser) {
     const { fullname, email, password, dateOfBirth, gender, role } = registerUser
     const id = `user-${this._idGenerator()}`
 
@@ -23,7 +27,7 @@ class UserRepositoryPostgres extends UserRepository {
     return new RegisteredUser({ id: registeredUser.id })
   }
 
-  async getUserById (id, userIdCredentials) {
+  async getUserById(id, userIdCredentials) {
     const findUser = await this._prisma.user.findUnique({
       where: {
         id
@@ -41,7 +45,7 @@ class UserRepositoryPostgres extends UserRepository {
     return mapDBToRegisteredUser(findUser)
   }
 
-  async getUserByEmail (email) {
+  async getUserByEmail(email) {
     const findUser = await this._prisma.user.findUnique({
       where: {
         email
@@ -49,13 +53,14 @@ class UserRepositoryPostgres extends UserRepository {
     })
 
     if (!findUser) {
+      log.error(`${email} data are not found in database`)
       throw new NotFoundError('user data not found.')
     }
 
     return mapDBToRegisteredUser(findUser)
   }
 
-  async verifyAvailableEmail (email) {
+  async verifyAvailableEmail(email) {
     const findUserEmail = await this._prisma.user.findUnique({
       where: {
         email
@@ -67,7 +72,7 @@ class UserRepositoryPostgres extends UserRepository {
     }
   }
 
-  async editUser (id, userIdCredentials, updateUser) {
+  async editUser(id, userIdCredentials, updateUser) {
     const { fullname, dateOfBirth, gender } = updateUser
 
     if (id !== userIdCredentials) {
@@ -94,7 +99,7 @@ class UserRepositoryPostgres extends UserRepository {
     }
   }
 
-  async editUserPassword (id, userIdCredentials, updateUserPassword) {
+  async editUserPassword(id, userIdCredentials, updateUserPassword) {
     if (id !== userIdCredentials) {
       throw new AuthorizationError('this user does not belong to credential user.')
     }
@@ -116,7 +121,7 @@ class UserRepositoryPostgres extends UserRepository {
     }
   }
 
-  async getUserPasswordById (id, userIdCredentials) {
+  async getUserPasswordById(id, userIdCredentials) {
     const findUser = await this._prisma.user.findUnique({
       where: {
         id
