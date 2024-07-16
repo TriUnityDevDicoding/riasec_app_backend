@@ -68,14 +68,4 @@ function createLog(filename, isConsole = false) {
   return logger
 }
 
-const consoleWinston = createLog(LOG_LABEL, true)
-
-// Override the base console log with winston
-console.error = function () {
-  return consoleWinston.error.apply(consoleWinston, arguments)
-}
-console.info = function () {
-  return consoleWinston.warn.apply(consoleWinston, arguments)
-}
-
 module.exports = createLog
