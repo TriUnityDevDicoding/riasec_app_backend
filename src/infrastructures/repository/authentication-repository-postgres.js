@@ -1,5 +1,8 @@
 const InvariantError = require('../../commons/exceptions/invariant-error')
 const AuthenticationRepository = require('../../domains/authentications/authentication-repository')
+const createLog = require('../../../../infrastructures/logging/winston')
+
+const log = createLog('authentications')
 
 class AuthenticationRepositoryPostgres extends AuthenticationRepository {
   constructor(prisma) {
@@ -23,6 +26,7 @@ class AuthenticationRepositoryPostgres extends AuthenticationRepository {
     })
 
     if (!result) {
+      log.error('refresh token not found in database')
       throw new InvariantError('refresh token not found in database.')
     }
   }
