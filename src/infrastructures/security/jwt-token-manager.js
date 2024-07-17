@@ -1,7 +1,7 @@
 const config = require('../../commons/config')
 const AuthenticationTokenManager = require('../../applications/security/authentication-token-manager')
 const InvariantError = require('../../commons/exceptions/invariant-error')
-const createLog = require('../../../../infrastructures/logging/winston')
+const createLog = require('../../infrastructures/logging/winston')
 
 const log = createLog('authentications')
 

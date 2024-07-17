@@ -3,7 +3,7 @@ const AuthenticationError = require('../../commons/exceptions/authentication-err
 const InvariantError = require('../../commons/exceptions/invariant-error')
 const createLog = require('../logging/winston')
 
-const log = createLog('login')
+const log = createLog('authentications')
 
 class BcryptPasswordHash extends PasswordHash {
   constructor(bcrypt, saltRound = 10) {

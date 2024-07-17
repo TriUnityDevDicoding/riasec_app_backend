@@ -1,5 +1,8 @@
-const AuthorizationError = require('../../commons/exceptions/authorization-error')
+// const AuthorizationError = require('../../commons/exceptions/authorization-error')
 const QuizResultRepository = require('../../domains/quiz-results/quiz-result-repository')
+const createLog = require('../../infrastructures/logging/winston')
+
+const log = createLog('quiz-result')
 
 class QuizResultRepositoryPostgres extends QuizResultRepository {
   constructor(prisma, idGenerator) {
@@ -9,6 +12,7 @@ class QuizResultRepositoryPostgres extends QuizResultRepository {
   }
 
   async addQuizResult(credentialId, newQuizResult, groqResponse, sessionId) {
+    const startTime = Date.now()
     const { Realistic, Investigative, Artistic, Social, Enterprising, Conventional } = newQuizResult
     const id = `quiz-result-${this._idGenerator()}`
 
@@ -35,11 +39,14 @@ class QuizResultRepositoryPostgres extends QuizResultRepository {
       }
     })
 
+    const durationMs = Date.now() - startTime
+    log.info('time needed for adding quiz result to database', { meta: `duration ${durationMs}ms` })
     return { id: addedQuizResult.id }
   }
 
   async getQuizResults(credentialId) {
-    return await this._prisma.quizResult.findMany({
+    const startTime = Date.now()
+    const quizResults = await this._prisma.quizResult.findMany({
       where: {
         owner: credentialId
       },
@@ -47,6 +54,10 @@ class QuizResultRepositoryPostgres extends QuizResultRepository {
         created_at: 'desc'
       }
     })
+
+    const durationMs = Date.now() - startTime
+    log.info('time needed for get quiz results from database', { meta: `duration ${durationMs}ms` })
+    return quizResults
   }
 }
 

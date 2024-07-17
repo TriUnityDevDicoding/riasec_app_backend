@@ -16,7 +16,7 @@ class AuthenticationsHandler {
 
   async postAuthenticationHandler(request, h) {
     const loginUserUseCase = this._container.getInstance(LoginUserUseCase.name)
-    log.info('request login, payload =>', JSON.stringify(request.payload.email))
+    log.info('start request login, payload =>', JSON.stringify(request.payload.email))
 
     const { accessToken, refreshToken } = await loginUserUseCase.execute(request.payload)
     log.info('user login successfully')
@@ -35,7 +35,7 @@ class AuthenticationsHandler {
 
   async putAuthenticationHandler(request) {
     const refreshAuthenticationUseCase = this._container.getInstance(RefreshAuthenticationUseCase.name)
-    log.info('request refresh token, payload =>', JSON.stringify(request.payload))
+    log.info('start request refresh token, payload =>', JSON.stringify(request.payload))
 
     const accessToken = await refreshAuthenticationUseCase.execute(request.payload)
     log.info('user refreshed token successfully')
@@ -51,7 +51,7 @@ class AuthenticationsHandler {
 
   async deleteAuthenticationHandler(request) {
     const logoutUserUseCase = this._container.getInstance(LogoutUserUseCase.name)
-    log.info('request delete token, payload =>', JSON.stringify(request.payload))
+    log.info('start request delete token, payload =>', JSON.stringify(request.payload))
 
     await logoutUserUseCase.execute(request.payload)
     log.info('user logged out successfully')
