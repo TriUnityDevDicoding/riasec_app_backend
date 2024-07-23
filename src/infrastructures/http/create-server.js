@@ -95,7 +95,18 @@ const createServer = async (container) => {
       return newResponse
     }
 
-    return h.continue
+    const { origin } = request.headers
+
+    if (origin && origin === config.app.corsOrigin) {
+      return h.continue
+    }
+
+    const newResponse = h.response({
+      status: 'fail',
+      message: 'Origin not allowed.'
+    })
+    newResponse.code(403)
+    return newResponse
   })
 
   return server
