@@ -1,6 +1,9 @@
 const config = require('../../commons/config')
 const AuthenticationTokenManager = require('../../applications/security/authentication-token-manager')
 const InvariantError = require('../../commons/exceptions/invariant-error')
+const createLog = require('../../infrastructures/logging/winston')
+
+const log = createLog('authentications')
 
 class JwtTokenManager extends AuthenticationTokenManager {
   constructor(jwt) {
@@ -21,6 +24,7 @@ class JwtTokenManager extends AuthenticationTokenManager {
       const artifacts = this._jwt.decode(token)
       this._jwt.verify(artifacts, config.jwt.refreshTokenKey)
     } catch (error) {
+      log.error('refresh token is not valid', error.message)
       throw new InvariantError('refresh token is not valid.')
     }
   }
