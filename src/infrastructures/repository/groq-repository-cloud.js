@@ -1,4 +1,7 @@
 const GroqRepository = require('../../domains/groq/groq-repository')
+const createLog = require('../../infrastructures/logging/winston')
+
+const log = createLog('groq-ai')
 
 class GroqRepositoryCloud extends GroqRepository {
   constructor(groq) {
@@ -14,6 +17,7 @@ class GroqRepositoryCloud extends GroqRepository {
     enterprisingScore,
     conventionalScore
   ) {
+    const startTime = Date.now()
     const chatCompletion = await this._groq.chat.completions.create({
       messages: [
         {
@@ -34,6 +38,9 @@ class GroqRepositoryCloud extends GroqRepository {
     })
 
     const response = chatCompletion.choices[0].message.content
+
+    const durationMs = Date.now() - startTime
+    log.info('time needed for prompting to groq ai', { meta: `duration ${durationMs}ms` })
 
     return response
   }

@@ -1,4 +1,7 @@
 const SessionRepository = require('../../domains/sessions/session-repository')
+const createLog = require('../../infrastructures/logging/winston')
+
+const log = createLog('session')
 
 class SessionRepositoryPostgres extends SessionRepository {
   constructor(prisma, idGenerator) {
@@ -8,6 +11,7 @@ class SessionRepositoryPostgres extends SessionRepository {
   }
 
   async addSession(credentialId) {
+    const startTime = Date.now()
     const id = `session-${this._idGenerator()}`
 
     const addedSession = await this._prisma.session.create({
@@ -21,10 +25,13 @@ class SessionRepositoryPostgres extends SessionRepository {
       }
     })
 
+    const durationMs = Date.now() - startTime
+    log.info('time needed for adding session to database', { meta: `duration ${durationMs}ms` })
     return { id: addedSession.id }
   }
 
   async putQuizResultId(sessionId, quizResultId) {
+    const startTime = Date.now()
     await this._prisma.session.update({
       where: {
         id: sessionId
@@ -33,6 +40,9 @@ class SessionRepositoryPostgres extends SessionRepository {
         quiz_result_id: quizResultId
       }
     })
+
+    const durationMs = Date.now() - startTime
+    log.info('time needed for updating quiz result on database', { meta: `duration ${durationMs}ms` })
   }
 }
 

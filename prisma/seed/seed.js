@@ -1,5 +1,4 @@
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+const prisma = require('../../src/infrastructures/database/client/prisma-client')
 
 const seeds = [
   require('./local_data/users'),

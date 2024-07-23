@@ -21,16 +21,25 @@ class LoginUserUseCase {
     const user = await this._userRepository.getUserByEmail(email)
     const encryptedPassword = user.password
     await this._passwordHash.compare(password, encryptedPassword)
-    const id = user.id
-    const fullname = user.fullname
     const dateOfBirth = await this._dateOfBirthParse.parseToString(user.dateOfBirth)
-    const gender = user.gender
-    const role = user.role
+    const { id, fullname, gender, role } = user
 
-    const accessToken = await this._authenticationTokenManager
-      .createAccessToken({ email, id, fullname, dateOfBirth, gender, role })
-    const refreshToken = await this._authenticationTokenManager
-      .createRefreshToken({ email, id, fullname, dateOfBirth, gender, role })
+    const accessToken = await this._authenticationTokenManager.createAccessToken({
+      email,
+      id,
+      fullname,
+      dateOfBirth,
+      gender,
+      role
+    })
+    const refreshToken = await this._authenticationTokenManager.createRefreshToken({
+      email,
+      id,
+      fullname,
+      dateOfBirth,
+      gender,
+      role
+    })
 
     const newAuthentication = new NewAuthentication({
       accessToken,

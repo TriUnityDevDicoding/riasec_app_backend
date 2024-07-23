@@ -233,4 +233,43 @@ describe('UserRepositoryPostgres', () => {
       expect(userPassword).not.toEqual(null)
     })
   })
+
+  describe('editUserPassword function', () => {
+    it('should throw AuthorizationError when user does not belong to credential user', async () => {
+      const userIdCredentials = 'user-111'
+      const newUserPasswordPayload = 'newPassword'
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+    
+      return expect(userRepositoryPostgres.editUserPassword('user-123', userIdCredentials, newUserPasswordPayload)).rejects.toThrow(AuthorizationError)
+    })
+
+    it('should throw NotFoundError when user not found', async () => {
+      const userIdCredentials = 'user-123'
+      const newUserPasswordPayload = 'newPassword'
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      return expect(userRepositoryPostgres.editUserPassword('user-123', userIdCredentials, newUserPasswordPayload)).rejects.toThrow(NotFoundError)
+    })
+
+    it('should throw InvariantError when inappropriate payload', async () => {
+      const userIdCredentials = 'user-123'
+      const newUserPasswordPayload = true
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      return expect(userRepositoryPostgres.editUserPassword('user-123', userIdCredentials, newUserPasswordPayload)).rejects.toThrow(InvariantError)
+    })
+
+    it('should run function editUserPassword correctly and return expected properties', async () => {
+      const userIdCredentials = 'user-123'
+      const newUserPasswordPayload = 'newPassword'
+      await UsersTableTestHelper.addUser({ id: userIdCredentials })
+      const userRepositoryPostgres = new UserRepositoryPostgres(prisma, {})
+
+      await userRepositoryPostgres.editUserPassword('user-123', userIdCredentials, newUserPasswordPayload)
+
+      const updatedUserPassword = await UsersTableTestHelper.findUserById(userIdCredentials)
+      expect(updatedUserPassword.password).toStrictEqual(newUserPasswordPayload)
+      expect(updatedUserPassword.id).toStrictEqual(userIdCredentials)
+    })
+  })
 })
